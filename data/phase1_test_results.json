@@ -1,0 +1,502 @@
+[
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "What is the capital of France?",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4690.058500011219,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 214.2767999903299,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 290.1902000012342,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 224.30460000759922,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 226.47009999491274,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 211.38009999413043,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Write a short, creative product description for a reusable coffee cup.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 226.2256999965757,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 230.0569999788422,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 229.91719999117777,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o",
+    "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 225.10359997977503,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "What is the capital of France?",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 246.54110000119545,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 221.26039999420755,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 217.85129999625497,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 210.87129999068566,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 227.7581999951508,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 226.31330002332106,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Write a short, creative product description for a reusable coffee cup.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 232.7581999998074,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 233.65899999043904,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 214.21299999929033,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "openai:gpt-4o-mini",
+    "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 261.67189999250695,
+    "cost_usd": 0.0,
+    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "What is the capital of France?",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 6671.640099986689,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4058.38489998132,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4072.0398999983445,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4059.845600015251,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4100.270599999931,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4078.547899989644,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Write a short, creative product description for a reusable coffee cup.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4066.359700023895,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4060.5099000094924,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4073.9188000152353,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "ollama:llama3.2",
+    "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 4066.8920999742113,
+    "cost_usd": 0.0,
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "What is the capital of France?",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 919.2278000118677,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 68.00980001571588,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 43.42329999781214,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 42.702200007624924,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 45.137599983718246,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 44.08809999586083,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Write a short, creative product description for a reusable coffee cup.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 41.230699978768826,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 45.11629999615252,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 84.50299999094568,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.3-70b-versatile",
+    "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 39.51569998753257,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "What is the capital of France?",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 42.647399997804314,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 37.87910001119599,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 46.332199999596924,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 42.576100007863715,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 41.90680000465363,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 39.97959999833256,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Write a short, creative product description for a reusable coffee cup.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 58.50730001111515,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 43.07620000327006,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 42.0000999874901,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  },
+  {
+    "model": "groq:llama-3.1-8b-instant",
+    "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
+    "text": "",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "latency_ms": 39.78009999264032,
+    "cost_usd": 0.0,
+    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+  }
+]
