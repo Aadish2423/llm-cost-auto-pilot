@@ -1,0 +1,19 @@
+# Maps each complexity tier to the model that should handle it. Change the
+# provider/model_id here to repoint a tier without touching any code.
+#
+# Defaults below deliberately point at providers that are actually
+# live-tested (Gemini) or free-tier (Groq) — see README for provider
+# status. Swap in OpenAI/Anthropic models once those keys are added.
+
+routing:
+  tier_1:
+    provider: groq
+    model_id: llama-3.1-8b-instant
+
+  tier_2:
+    provider: gemini
+    model_id: gemini-2.5-flash
+
+  tier_3:
+    provider: gemini
+    model_id: gemini-2.5-pro

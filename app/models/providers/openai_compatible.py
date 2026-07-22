@@ -13,6 +13,11 @@ import os
 
 from .base import BaseProvider, ProviderError
 
+# Kept in sync with the other providers' output cap (see MAX_OUTPUT_TOKENS
+# in anthropic_provider.py) so the Phase 1 benchmark is comparable across
+# providers instead of each one running to its own default length.
+MAX_OUTPUT_TOKENS = 1024
+
 
 class OpenAICompatibleProvider(BaseProvider):
     def __init__(self, env_var: str, base_url: str | None, display_name: str) -> None:
@@ -44,17 +49,24 @@ class OpenAICompatibleProvider(BaseProvider):
 
     def call(self, prompt: str, model_id: str) -> tuple[str, int, int]:
         client = self._get_client()
+        # Response parsing stays inside this try/except (not after it) — an
+        # empty `choices` list (e.g. a content-filter block) or a missing
+        # `usage` block should become a ProviderError, not an uncaught
+        # IndexError/AttributeError that crashes the whole batch run.
         try:
             response = client.chat.completions.create(
                 model=model_id,
                 messages=[{"role": "user", "content": prompt}],
+                max_tokens=MAX_OUTPUT_TOKENS,
             )
+            if not response.choices:
+                raise ValueError("response contained no choices (likely content-filtered)")
+            text = response.choices[0].message.content or ""
+            input_tokens = response.usage.prompt_tokens if response.usage else 0
+            output_tokens = response.usage.completion_tokens if response.usage else 0
         except Exception as e:
             raise ProviderError(
                 f"{self._display_name} call failed for model '{model_id}': {e}"
             ) from e
 
-        text = response.choices[0].message.content or ""
-        input_tokens = response.usage.prompt_tokens
-        output_tokens = response.usage.completion_tokens
         return text, input_tokens, output_tokens

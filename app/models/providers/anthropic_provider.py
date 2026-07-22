@@ -38,16 +38,21 @@ class AnthropicProvider(BaseProvider):
 
     def call(self, prompt: str, model_id: str) -> tuple[str, int, int]:
         client = self._get_client()
+        # Response parsing stays inside this try/except (not after it) — a
+        # response whose first content block isn't a text block (e.g. a
+        # thinking block) should become a ProviderError, not an uncaught
+        # AttributeError that crashes the whole batch run.
         try:
             response = client.messages.create(
                 model=model_id,
                 max_tokens=MAX_OUTPUT_TOKENS,
                 messages=[{"role": "user", "content": prompt}],
             )
+            text_blocks = [block.text for block in response.content if block.type == "text"]
+            text = "".join(text_blocks)
+            input_tokens = response.usage.input_tokens
+            output_tokens = response.usage.output_tokens
         except Exception as e:
             raise ProviderError(f"Anthropic call failed for model '{model_id}': {e}") from e
 
-        text = response.content[0].text if response.content else ""
-        input_tokens = response.usage.input_tokens
-        output_tokens = response.usage.output_tokens
         return text, input_tokens, output_tokens

@@ -9,9 +9,9 @@ optimizing across cost, latency, quality, and data-locality, not cost alone.
 This is a portfolio/learning project built in phases. Status below reflects
 what's actually implemented right now, not the end-state design.
 
-## Status: Phase 1 — Unified Model Interface ✅
+## Status: Phase 4 — Explainable Routing ✅
 
-What exists today:
+### Phase 1 — Unified Model Interface
 - A model registry (`config/model_registry.yaml`) describing every model the
   router can pick from: provider, model ID, cost per input/output token,
   average latency, and a quality tier (high/medium/low).
@@ -27,17 +27,123 @@ What exists today:
 - A test harness (`scripts/test_providers.py`) that sends the same 10
   prompts to every registered model and reports success rate, cost, and
   latency — skipping providers you don't have keys for instead of crashing.
+- **Hardening pass:** every provider's response-parsing code now lives
+  inside the same try/except as its network call — previously a malformed
+  or safety-filtered response (empty `choices`, missing `usage`, a non-text
+  content block) could raise *outside* the error handling and crash the
+  whole batch run instead of being logged as one failed request. The
+  dispatcher also got a last-resort catch-all so an unanticipated bug in a
+  provider still becomes data on the response, never a crash. All
+  providers now cap output at the same 1024 tokens so the "same prompt to
+  every model" benchmark is comparing like with like.
 
-**Live/tested:** Gemini (you have a key for this).
+### Phase 2 — Complexity Classifier + Routing Map
+- `app/classifier/features.py` — extracts signals from a prompt (keyword
+  matches in three weighted categories, constraint count, word count,
+  presence of a long quoted/context block). Word-boundary regex matching,
+  not substring — an earlier version incorrectly matched "list" inside
+  "checklist" and inside prompts that merely *mention* a list.
+- `app/classifier/heuristic.py` — the v1 classifier: scores a prompt from
+  the features above and buckets it into `ComplexityTier.TIER_1/2/3`. No
+  training data required; this is what gets routing working today.
+- `app/classifier/tiers.py` — the `ComplexityTier` enum shared by the
+  classifier and the routing config.
+- `config/routing_config.yaml` — maps each tier to a specific
+  provider/model. Currently: Tier 1 → Groq `llama-3.1-8b-instant`, Tier
+  2/3 → Gemini `gemini-2.5-flash` / `gemini-2.5-pro` (picked because those
+  are the providers actually live-tested or free-tier so far — repoint
+  freely once you have more keys).
+- `app/router/routing_engine.py` — `route_request(prompt)`, the one
+  function that ties classifier → routing map → Phase 1's `send_request()`
+  together and returns a `RoutingResult` (response, tier, score, the
+  specific signals that fired).
+- `scripts/test_classifier.py` — offline sanity check (no API keys, no
+  network calls) that runs the classifier against 10 example prompts
+  spanning all three tiers and flags any tier that doesn't match a hand
+  -set expectation. Run with `-v` to see which signals drove each score.
+- `data/labeled_prompts.csv` — empty (`prompt,tier,notes` header only) and
+  waiting for your 200+ hand-labeled examples. Not required for Phase 2 to
+  work — the heuristic classifier needs no training data — but required
+  before the Phase 2b scikit-learn upgrade can happen.
+- **Hardening pass:** `load_routing_map()` now fails fast with a clear
+  `ValueError` if `routing_config.yaml` is missing its `routing` key or
+  missing an entry for any tier, instead of crashing later with a bare,
+  confusing `KeyError` from deep inside `route_request()`.
+
+### Phase 3 — Pre-call Cost Prediction
+- `app/router/cost_predictor.py` — `predict_cost(prompt)` estimates input
+  tokens (~4 chars/token rule of thumb) and output tokens (a fixed
+  per-tier assumption keyed off the Phase 2 classifier — 80/250/500 tokens
+  for Tier 1/2/3), then computes what the prompt would cost on *every*
+  model in the registry, sorted cheapest first. It never calls a provider —
+  pure math against `config/model_registry.yaml`.
+- **"Recommended"** = cheapest model whose static `quality_tier` meets a
+  minimum bar for the prompt's complexity tier (Tier 3 won't recommend a
+  "low" quality model even if it's cheapest). This is a light preview of
+  Phase 5's full multi-objective scoring, not the real thing yet.
+- **Deliberately not doing what the original mockup showed:** no fake
+  "Expected Quality: 97%" — there's no real quality measurement in the
+  system until Phase 6's verification loop exists, so showing a precise,
+  unmeasured percentage would be presenting a guess as fact. The
+  `quality_tier` (high/medium/low) shown instead is honest about what we
+  actually know right now.
+- `scripts/predict_cost.py` — CLI demo: `python scripts/predict_cost.py
+  "your prompt"` prints the full cost/quality table across all models,
+  flagging both the recommended pick and whatever `routing_config.yaml`
+  currently routes that tier to (they can disagree — see below).
+- **Real finding from testing this:** for Tier 1 prompts, the recommended
+  model is now Ollama (`$0`, meets the "low" bar) — cheaper than Groq,
+  which is what `routing_config.yaml` currently routes Tier 1 to. For
+  Tier 2, `gpt-4o-mini` (dormant, no key yet) undercuts the current
+  Gemini Flash route by ~4x. Not fixed automatically — Phase 3 only
+  *predicts and surfaces* this, it doesn't rewrite the routing config;
+  that's a config change you can make once you decide you want it.
+- **Hardening pass:** `scripts/predict_cost.py` called `max()` on the
+  estimates list to size a table column with no empty-list guard — would
+  crash with `ValueError: max() arg is an empty sequence` if the registry
+  were ever empty. The line right above it already guarded this exact
+  case for a different purpose; the guard just didn't extend far enough.
+  Fixed with an early return.
+
+### Phase 4 — Explainable Routing
+- `app/router/explainer.py` — `explain(routing_result)` turns a completed
+  routing decision into a `RoutingExplanation`: the tier and *why*
+  (reuses Phase 2's `matched_signals` directly, no new logic), a
+  confidence score, the chosen model's cost/latency, and the cheapest
+  qualifying alternative with a cost/quality delta against it. Built
+  entirely by combining Phase 2 and Phase 3's existing outputs — no new
+  estimation logic.
+- **Confidence, honestly:** derived from how far the classifier's raw
+  score sits from the nearest tier boundary — a score right on a boundary
+  (e.g. Tier 3 at score=3, the minimum) gets 50% ("could easily have
+  landed in the neighboring tier"); a score deep inside a tier's range
+  approaches 100%. This is **not a calibrated probability** — it's a
+  transparent function of the same heuristic score, documented as such.
+  Same honesty rule as Phase 3's refusal to show a fabricated quality
+  percentage.
+- `RoutingResult` (Phase 2) gained a `prompt` field so it's self-contained
+  — the explainer needs the original prompt to re-run the cost predictor,
+  and Phase 7's audit log will want it stored alongside the response too.
+- `scripts/explain_routing.py` — CLI demo: routes a real prompt (this one
+  *does* make a live provider call, unlike the Phase 2/3 demo scripts)
+  and prints the full explanation — tier, confidence, matched signals,
+  chosen model, cheapest alternative with cost/quality delta, and the
+  actual response or error.
+- Verified against all three tiers and both cost-delta directions (chosen
+  model cheaper than the alternative, and chosen model more expensive) —
+  confirmed via a direct Ollama call, since `routing_config.yaml`
+  currently doesn't route anything to it (see Phase 3's finding above).
+
+**Live/tested:** Gemini (you have a key for this). Ollama (`llama3.2`,
+installed and pulled locally — verified end-to-end through
+`send_request()`, no API key needed, $0 cost).
 **Live, free tier, needs your own key:** Groq, Together AI — both offer a
 free/no-payment-required tier, unlike OpenAI and Anthropic, so these are
-the easiest way to get a second and third live data point without paying.
-Sign up at console.groq.com and api.together.ai.
+the easiest way to get a second and third live cloud data point without
+paying. Sign up at console.groq.com and api.together.ai.
 **Coded but dormant (needs a paid key):** OpenAI, Anthropic — adapters are
 written against the real SDKs and follow the exact same interface as the
 working providers, so they should work as soon as a key is added to `.env`.
-**Local:** Ollama — adapter is written, but Ollama itself isn't installed
-yet on this machine. See setup below.
 
 > ⚠️ Never paste a real API key into any `.py` or `.yaml` file. Keys only
 > ever go in `.env` (gitignored). If you accidentally paste one into
@@ -71,7 +177,13 @@ yet on this machine. See setup below.
    At minimum, set `GEMINI_API_KEY`. Leave the others blank until you have
    them — those providers are simply skipped by the test harness.
 4. (Optional, for the local tier) Install [Ollama](https://ollama.com/download),
-   run `ollama serve`, then pull a small model, e.g. `ollama pull llama3.2`.
+   then pull the model the registry references: `ollama pull llama3.2`.
+   Ollama runs as a background Windows service once installed, so you
+   don't need to manually run `ollama serve` yourself. Note: the `ollama`
+   CLI is registered for PowerShell/cmd, not Git Bash — if you're in Git
+   Bash and `ollama` isn't found, that's a PATH difference between shells,
+   not a broken install; the project's Python code talks to it over HTTP
+   (`localhost:11434`) regardless of which shell you're in.
 
 ## Try it
 
@@ -79,15 +191,42 @@ yet on this machine. See setup below.
 python scripts/test_providers.py
 ```
 
-This sends 10 fixed test prompts (spanning simple extraction to multi-step
+Sends 10 fixed test prompts (spanning simple extraction to multi-step
 reasoning) to every available model, prints a cost/latency/success summary
 table, and saves the raw results to `data/phase1_test_results.json`.
+
+```
+python scripts/test_classifier.py -v
+```
+
+Runs the heuristic classifier against 10 example prompts and prints the
+tier it picked, the score, and (with `-v`) exactly which signals fired —
+no API keys or network calls needed, this only exercises the classifier
+logic.
+
+```
+python scripts/predict_cost.py "Summarize this document in 3 bullet points"
+```
+
+Prints the estimated cost of that prompt across every registered model,
+cheapest first, with the recommended pick and the currently-configured
+route both flagged. No API keys or network calls needed.
+
+```
+python scripts/explain_routing.py "Why did you pick this model?"
+```
+
+Routes the prompt for real (this one does make a live call) and prints
+the full explanation: tier, confidence, matched signals, the model
+chosen, the cheapest qualifying alternative with a cost/quality delta,
+and the actual response or error.
 
 ## Repo structure
 
 ```
 config/
   model_registry.yaml   pricing, latency, and quality tier per model
+  routing_config.yaml   tier -> provider/model map
 app/
   models/
     registry.py          ModelConfig dataclass + YAML loader + cost math
@@ -99,11 +238,22 @@ app/
       anthropic_provider.py
       ollama_provider.py
       openai_compatible.py  shared adapter for OpenAI, Groq, Together AI
+  classifier/
+    tiers.py              ComplexityTier enum
+    features.py            prompt -> PromptFeatures
+    heuristic.py            PromptFeatures -> ComplexityTier (v1, rule-based)
+  router/
+    routing_engine.py     route_request() — classifier + routing map + dispatcher
+    cost_predictor.py      predict_cost() — pre-call cost/quality estimate, all models
+    explainer.py            explain() — tier/confidence/signals/alternative writeup
 scripts/
   test_providers.py      Phase 1 validation harness
+  test_classifier.py     Phase 2 offline classifier sanity check
+  predict_cost.py        Phase 3 cost-prediction CLI demo
+  explain_routing.py     Phase 4 explanation CLI demo (makes a real provider call)
 data/
-  phase1_test_results.json  (generated, gitignored is NOT set for this one file —
-                              small enough to keep as a portfolio artifact)
+  phase1_test_results.json  (generated; kept as a portfolio artifact)
+  labeled_prompts.csv        (empty header, waiting for your hand-labels)
 ```
 
 ## Known limitations / things to verify
@@ -116,7 +266,14 @@ data/
 - OpenAI and Anthropic adapters are untested against real traffic (no keys
   yet). They follow the identical pattern to the working Gemini adapter,
   so bugs there are more likely SDK-shape mismatches than logic errors.
-- Ollama adapter is untested — Ollama isn't installed on this machine yet.
+- Ollama's **first** request after the model has been idle is slow —
+  observed ~155 seconds for `llama3.2` while Ollama loads the 2GB model
+  into memory. Subsequent requests are fast (normal LLM latency) as long
+  as the model stays loaded, but Ollama unloads idle models after a few
+  minutes by default, so the next request after a gap pays that cost
+  again. The `avg_latency_ms: 800` in `config/model_registry.yaml`
+  reflects warm-model latency, not this cold-start spike — worth knowing
+  before Phase 3's cost/latency predictions start factoring it in.
 - If a provider that should be skipped instead fails with a `401` error,
   you likely have a stray API key for a *different* service set as a
   global environment variable on your machine under the same name (this
@@ -124,14 +281,43 @@ data/
   harmless — the call fails before anything is billed — but you can remove
   the stray variable from Windows environment variables if the noise
   bothers you.
+- The heuristic classifier matches whole words (`\bcompare\b`), not stems —
+  "compare" matches but "compares"/"comparing" won't, and "tradeoff"
+  matches but "tradeoffs" won't. This under-counts complex-keyword signals
+  on inflected prompts. Acceptable for a rule-based v1 (the scikit-learn
+  v2 classifier won't have this limitation), but worth knowing if a tier
+  assignment looks off.
+- Routing map (`config/routing_config.yaml`) currently points Tier 1 at
+  Groq and Tiers 2/3 at Gemini. Every one of those calls will fail with a
+  clean error until you've actually added `GEMINI_API_KEY` / `GROQ_API_KEY`
+  to `.env` — `route_request()` still returns a full `RoutingResult` in
+  that case, just with `response.error` set, so this is expected, not a
+  bug, until keys are added.
+- `predict_cost.py`'s output-token estimate is a flat number per
+  complexity tier (80/250/500), not per-model or per-prompt — a terse
+  Tier 2 prompt and a verbose one get the same output estimate today.
+  Expect the dollar figures to be rough, not exact, until Phase 7's
+  logging lets this be replaced with real historical averages.
+- `predict_cost.py` and `route_request()` currently disagree for Tier 1
+  (Ollama is now cheaper than Groq, per the "real finding" note above)
+  and are unlikely to agree in general — prediction doesn't feed back
+  into the routing config automatically. If you want the router to
+  actually route to what's predicted cheapest, that's a manual edit to
+  `config/routing_config.yaml` for now.
+- `explain()`'s confidence score is a transparent function of the
+  classifier's raw score, not a calibrated probability — don't read
+  "74%" as "correct 74% of the time." It only tells you how close the
+  score sat to a tier boundary.
 
 ## Roadmap
 
 Build order:
 1. Unified provider interface — **done**
-2. Complexity classifier (heuristic v1 → scikit-learn v2) + routing map
-3. Pre-call cost prediction
-4. Explainable routing
+2. Complexity classifier (heuristic v1) + routing map — **done** (v1 is
+   rule-based and live; the scikit-learn v2 upgrade is still blocked on
+   your 200+ hand-labeled `data/labeled_prompts.csv` rows)
+3. Pre-call cost prediction — **done**
+4. Explainable routing — **done**
 5. Multi-objective optimization (cost/latency/quality/data-locality)
 6. Async quality verification + auto-escalation
 7. SQLite logging + Streamlit cost dashboard

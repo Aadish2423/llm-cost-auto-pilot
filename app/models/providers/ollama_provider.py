@@ -2,6 +2,11 @@ import os
 
 from .base import BaseProvider, ProviderError
 
+# Kept in sync with the other providers' output cap (see MAX_OUTPUT_TOKENS
+# in anthropic_provider.py) so the Phase 1 benchmark is comparable across
+# providers instead of each one running to its own default length.
+MAX_OUTPUT_TOKENS = 1024
+
 
 class OllamaProvider(BaseProvider):
     """Talks to a local Ollama daemon. Requires no API key, but requires
@@ -29,18 +34,22 @@ class OllamaProvider(BaseProvider):
 
     def call(self, prompt: str, model_id: str) -> tuple[str, int, int]:
         client = self._get_client()
+        # Response parsing stays inside this try/except (not after it) —
+        # an unexpected response shape should become a ProviderError, not
+        # an uncaught KeyError that crashes the whole batch run.
         try:
             response = client.chat(
                 model=model_id,
                 messages=[{"role": "user", "content": prompt}],
+                options={"num_predict": MAX_OUTPUT_TOKENS},
             )
+            text = response["message"]["content"]
+            input_tokens = response.get("prompt_eval_count", 0)
+            output_tokens = response.get("eval_count", 0)
         except Exception as e:
             raise ProviderError(
                 f"Ollama call failed for model '{model_id}'. Is `ollama serve` "
                 f"running and has `ollama pull {model_id}` been run? Original error: {e}"
             ) from e
 
-        text = response["message"]["content"]
-        input_tokens = response.get("prompt_eval_count", 0)
-        output_tokens = response.get("eval_count", 0)
         return text, input_tokens, output_tokens

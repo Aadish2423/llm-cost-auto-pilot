@@ -2,6 +2,12 @@ import os
 
 from .base import BaseProvider, ProviderError
 
+# Kept in sync with the cap the other providers use (see MAX_OUTPUT_TOKENS
+# in anthropic_provider.py) so the Phase 1 "same 10 prompts to every model"
+# benchmark is comparing apples to apples instead of whatever each
+# provider's own default output length happens to be.
+MAX_OUTPUT_TOKENS = 1024
+
 
 class GeminiProvider(BaseProvider):
     def __init__(self) -> None:
@@ -30,12 +36,25 @@ class GeminiProvider(BaseProvider):
 
     def call(self, prompt: str, model_id: str) -> tuple[str, int, int]:
         client = self._get_client()
+
+        # Response parsing lives inside this same try/except, not after it —
+        # a safety-filtered or otherwise malformed response can raise from
+        # `.text`/`.usage_metadata` just as easily as the network call can
+        # fail, and both need to turn into a ProviderError instead of an
+        # uncaught crash that would take down the whole batch run.
         try:
-            response = client.models.generate_content(model=model_id, contents=prompt)
+            from google.genai import types
+
+            response = client.models.generate_content(
+                model=model_id,
+                contents=prompt,
+                config=types.GenerateContentConfig(max_output_tokens=MAX_OUTPUT_TOKENS),
+            )
+            usage = response.usage_metadata
+            input_tokens = (usage.prompt_token_count or 0) if usage else 0
+            output_tokens = (usage.candidates_token_count or 0) if usage else 0
+            text = response.text or ""
         except Exception as e:
             raise ProviderError(f"Gemini call failed for model '{model_id}': {e}") from e
 
-        usage = response.usage_metadata
-        input_tokens = usage.prompt_token_count or 0
-        output_tokens = usage.candidates_token_count or 0
-        return response.text or "", input_tokens, output_tokens
+        return text, input_tokens, output_tokens

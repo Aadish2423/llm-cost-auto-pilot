@@ -52,6 +52,13 @@ def send_request(prompt: str, model_config: ModelConfig) -> LLMResponse:
     except ProviderError as e:
         text, input_tokens, output_tokens = "", 0, 0
         error = str(e)
+    except Exception as e:
+        # Last-resort safety net: every provider already converts its own
+        # SDK/parsing failures into ProviderError, but this exists so a bug
+        # in a provider we haven't anticipated still becomes data on the
+        # response instead of crashing whatever batch job called us.
+        text, input_tokens, output_tokens = "", 0, 0
+        error = f"Unexpected error calling {model_config.key}: {e}"
     latency_ms = (time.perf_counter() - start) * 1000
 
     cost_usd = model_config.estimate_cost(input_tokens, output_tokens)
