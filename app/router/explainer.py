@@ -47,6 +47,7 @@ class RoutingExplanation:
     chosen_quality_tier: str
     chosen_cost_usd: float
     chosen_avg_latency_ms: float
+    chosen_meets_quality_bar: bool
 
     alternative_model: str | None
     alternative_quality_tier: str | None
@@ -76,6 +77,9 @@ def explain(routing_result: RoutingResult) -> RoutingExplanation:
     )
 
     chosen_cost = chosen_estimate.estimated_cost_usd if chosen_estimate else routing_result.response.cost_usd
+    # Conservative default (flag as a concern) for the practically-unreachable
+    # case where the chosen model isn't found in the registry scan at all.
+    chosen_meets_bar = chosen_estimate.meets_quality_bar if chosen_estimate else False
 
     cost_delta = None
     quality_delta = None
@@ -99,6 +103,7 @@ def explain(routing_result: RoutingResult) -> RoutingExplanation:
         chosen_quality_tier=chosen.quality_tier.value,
         chosen_cost_usd=chosen_cost,
         chosen_avg_latency_ms=chosen.avg_latency_ms,
+        chosen_meets_quality_bar=chosen_meets_bar,
         alternative_model=alternative.model_config.key if alternative else None,
         alternative_quality_tier=alternative.model_config.quality_tier.value if alternative else None,
         alternative_cost_usd=alternative.estimated_cost_usd if alternative else None,

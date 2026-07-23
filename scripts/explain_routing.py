@@ -42,6 +42,11 @@ def main() -> None:
     print("=== Routing decision ===")
     print(f"Chosen model: {exp.chosen_model}  (quality: {exp.chosen_quality_tier})")
     print(f"Estimated cost: ${exp.chosen_cost_usd:.6f}   avg latency: {exp.chosen_avg_latency_ms:.0f} ms")
+    if not exp.chosen_meets_quality_bar:
+        print(
+            f"WARNING: this model's quality tier does NOT meet the minimum bar "
+            f"for a {exp.tier.value} prompt — check config/routing_config.yaml"
+        )
     print()
     if exp.alternative_model:
         print("=== Cheapest qualifying alternative ===")

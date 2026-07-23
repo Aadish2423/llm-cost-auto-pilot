@@ -9,7 +9,7 @@ optimizing across cost, latency, quality, and data-locality, not cost alone.
 This is a portfolio/learning project built in phases. Status below reflects
 what's actually implemented right now, not the end-state design.
 
-## Status: Phase 4 — Explainable Routing ✅
+## Status: Phase 6 — Async Quality Verification + Auto-escalation ✅
 
 ### Phase 1 — Unified Model Interface
 - A model registry (`config/model_registry.yaml`) describing every model the
@@ -133,6 +133,87 @@ what's actually implemented right now, not the end-state design.
   model cheaper than the alternative, and chosen model more expensive) —
   confirmed via a direct Ollama call, since `routing_config.yaml`
   currently doesn't route anything to it (see Phase 3's finding above).
+- **Hardening pass (found during the Phase 5/6 audit):** `explain()` was
+  computing whether the chosen model meets its own tier's quality bar
+  (`chosen_estimate.meets_quality_bar`) and then silently discarding that
+  signal — for a phase whose entire purpose is surfacing routing risk,
+  quietly dropping "this choice might not even clear the bar for its own
+  tier" undermined the point. Added a `chosen_meets_quality_bar` field and
+  a WARNING line in `explain_routing.py` when it's `False`. Verified by
+  simulating a deliberately misconfigured routing (a Tier 3 prompt forced
+  onto a "low" quality model) and confirming the flag correctly flips.
+
+### Phase 5 — Multi-objective Optimization
+- `app/router/multi_objective.py` — `select_model(prompt, objectives)`
+  scores every candidate model on **cost + latency + quality**, each
+  min-max normalized to 0–1 and combined via configurable weights
+  (`RoutingObjectives`). Five named profiles ship as presets: `BALANCED`,
+  `COST_FOCUSED`, `LATENCY_FOCUSED`, `QUALITY_FOCUSED`, and
+  `ON_PREM_ONLY`.
+- **Data-locality is a hard constraint, not a weight** — matches the
+  original design's own framing ("Hospital → must stay on-prem → choose
+  Ollama"). A request that must stay local doesn't get a spectrum; models
+  that aren't `local: true` are filtered out *before* scoring, the same
+  way a hard `max_latency_ms` ceiling filters out anything too slow.
+  Weights only ever apply to whatever survives the hard filters.
+- `scripts/select_model_demo.py` — CLI demo: runs the same prompt through
+  all five profiles side by side. Never calls a provider — pure scoring
+  against the registry, like Phase 3.
+- **Real finding from testing this:** for the current registry, Groq's
+  `llama-3.3-70b-versatile` is close to Pareto-dominant — cheapest,
+  fastest, *and* highest quality tier simultaneously among eligible
+  candidates for most prompts — so soft weight changes (balanced vs.
+  cost-focused vs. quality-focused) rarely flip the pick. Only a **hard**
+  constraint does: `ON_PREM_ONLY` forces Ollama, and a `max_latency_ms:
+  300` cap forces Groq's smaller 8B model instead of the 70B. This is an
+  honest reflection of the registry's current numbers, not a demo
+  artifact — a genuinely close-to-dominant option existing is itself a
+  real, useful thing to have found.
+- **Hardening pass (caught before it could bite):** the demo script sized
+  its "chosen model" and "profile" table columns with fixed-width guesses
+  — the same bug class that hit `predict_cost.py` in Phase 3 (Together
+  AI's model keys and the longer profile names both exceed those
+  guesses). Fixed proactively with the same dynamic-width approach used
+  there, before it ever produced misaligned output.
+
+### Phase 6 — Async Quality Verification + Auto-escalation
+- `app/router/verifier.py` — `verify_and_escalate(routing_result)` sends
+  the same prompt to the strongest configured model (whatever Tier 3
+  routes to) as a reference, scores text-similarity agreement against the
+  originally-routed model's answer, and swaps in the reference answer
+  when agreement falls below a threshold (default 0.5). Returns a
+  `VerificationResult` with one of four statuses: `verified`, `escalated`,
+  `already_top_tier` (nothing stronger exists to check against), or
+  `comparison_failed` (the original and/or reference call itself failed —
+  handled distinctly from genuine disagreement so the two are never
+  conflated).
+- **"Async," honestly:** the original design wants this as a
+  fire-and-forget background job that never blocks the user-facing
+  response. There's no job queue or background worker yet — that's
+  genuinely Phase 10's job (FastAPI + Docker + a background worker
+  process) — so `verify_and_escalate()` is **synchronous** for now: it
+  makes the reference call and returns inline. When Phase 10 adds a real
+  worker, this is the function that gets queued; the verification logic
+  itself won't need to change.
+- **Scoring, honestly:** uses `difflib` text similarity, not an
+  LLM-as-judge, even though the original design names both ("Custom
+  scoring + LLM-as-judge"). Text similarity is a weak proxy for semantic
+  agreement — two answers can be worded completely differently but mean
+  the same thing (scores low when it shouldn't), or be superficially
+  similar but factually wrong (scores high when it shouldn't). An
+  LLM-as-judge call would be a meaningfully better signal; it's a
+  documented, open follow-up, not something built here — adding it now
+  would mean shipping two half-verified pieces instead of one solid one.
+- `scripts/verify_routing.py` — CLI demo: routes a prompt for real, then
+  runs verification against it, printing the agreement score and whether
+  escalation happened. Makes up to two live provider calls.
+- Verified all four status paths: `already_top_tier` and
+  `comparison_failed` confirmed via live runs (routing config currently
+  has no working keys, which conveniently exercises the failure path for
+  free); `verified` and `escalated` confirmed via deterministic tests
+  with mocked responses (identical text → agreement 1.0, no escalation;
+  divergent text → agreement 0.21, correctly escalates and swaps the
+  final response to the reference model).
 
 **Live/tested:** Gemini (you have a key for this). Ollama (`llama3.2`,
 installed and pulled locally — verified end-to-end through
@@ -221,6 +302,23 @@ the full explanation: tier, confidence, matched signals, the model
 chosen, the cheapest qualifying alternative with a cost/quality delta,
 and the actual response or error.
 
+```
+python scripts/select_model_demo.py "Your prompt here"
+```
+
+Shows how the same prompt gets routed under five different objective
+profiles (balanced, cost-focused, latency-focused, quality-focused,
+on-prem-only) side by side, plus a strict-latency hard-constraint
+example. No API keys or network calls needed.
+
+```
+python scripts/verify_routing.py "Your prompt here"
+```
+
+Routes the prompt for real, then verifies it against the strongest
+configured model and reports whether it escalated. Makes up to two live
+provider calls.
+
 ## Repo structure
 
 ```
@@ -246,11 +344,15 @@ app/
     routing_engine.py     route_request() — classifier + routing map + dispatcher
     cost_predictor.py      predict_cost() — pre-call cost/quality estimate, all models
     explainer.py            explain() — tier/confidence/signals/alternative writeup
+    multi_objective.py      select_model() — weighted cost/latency/quality scoring
+    verifier.py              verify_and_escalate() — reference-check + auto-escalation
 scripts/
   test_providers.py      Phase 1 validation harness
   test_classifier.py     Phase 2 offline classifier sanity check
   predict_cost.py        Phase 3 cost-prediction CLI demo
   explain_routing.py     Phase 4 explanation CLI demo (makes a real provider call)
+  select_model_demo.py   Phase 5 multi-objective CLI demo
+  verify_routing.py      Phase 6 verification CLI demo (makes real provider calls)
 data/
   phase1_test_results.json  (generated; kept as a portfolio artifact)
   labeled_prompts.csv        (empty header, waiting for your hand-labels)
@@ -308,6 +410,27 @@ data/
   classifier's raw score, not a calibrated probability — don't read
   "74%" as "correct 74% of the time." It only tells you how close the
   score sat to a tier boundary.
+- `select_model()` (Phase 5) and `route_request()` (Phase 2) are
+  independent — multi-objective scoring doesn't feed back into
+  `routing_config.yaml` any more than Phase 3's predictions do. If you
+  want the static router to actually route by weighted score instead of
+  a fixed tier→model map, that's a design change for a later phase, not
+  something Phase 5 does automatically.
+- `select_model()`'s cost/latency/quality weighting only distinguishes
+  candidates when the registry actually has spread on those axes for a
+  given tier — see Phase 5's "real finding" above. Don't expect every
+  profile to pick a different model; expect hard constraints
+  (`require_local`, `max_latency_ms`) to matter more than soft weights
+  for this particular registry.
+- `verify_and_escalate()` (Phase 6) always checks against whatever Tier 3
+  routes to — if `routing_config.yaml`'s Tier 3 entry doesn't have a
+  working key, verification will always come back `comparison_failed`
+  (or `already_top_tier` for anything already routed to Tier 3's model)
+  until that key exists. Not a bug — there's nothing to compare against.
+- `verify_and_escalate()` doubles the number of live calls for anything
+  not already on the top tier (one for the route, one for the reference
+  check) — real cost to be aware of if you run it at volume, since it's
+  fully synchronous right now (see the "async, honestly" note above).
 
 ## Roadmap
 
@@ -318,8 +441,9 @@ Build order:
    your 200+ hand-labeled `data/labeled_prompts.csv` rows)
 3. Pre-call cost prediction — **done**
 4. Explainable routing — **done**
-5. Multi-objective optimization (cost/latency/quality/data-locality)
-6. Async quality verification + auto-escalation
+5. Multi-objective optimization (cost/latency/quality/data-locality) — **done**
+6. Async quality verification + auto-escalation — **done** (synchronous
+   for now — genuinely async needs Phase 10's background worker)
 7. SQLite logging + Streamlit cost dashboard
 8. **RAG** — added after deciding the core loop (2–7) needed to be solid first:
    - **Context compression**: chunk/embed/retrieve only the relevant pieces
