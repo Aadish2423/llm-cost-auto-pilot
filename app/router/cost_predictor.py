@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 from ..classifier.heuristic import classify
 from ..classifier.tiers import ComplexityTier
-from ..models.registry import ModelConfig, QualityTier, load_registry
+from ..models.registry import QUALITY_RANK, ModelConfig, QualityTier, load_registry
 
 # Rough ~4-chars-per-token rule of thumb for English text. Real tokenizers
 # differ per provider/model; this is a prediction, not a guarantee.
@@ -33,7 +33,6 @@ MIN_QUALITY_FOR_TIER = {
     ComplexityTier.TIER_2: QualityTier.MEDIUM,
     ComplexityTier.TIER_3: QualityTier.HIGH,
 }
-_QUALITY_RANK = {QualityTier.LOW: 0, QualityTier.MEDIUM: 1, QualityTier.HIGH: 2}
 
 
 @dataclass
@@ -72,7 +71,7 @@ def predict_cost(prompt: str, registry: list[ModelConfig] | None = None) -> Cost
             estimated_input_tokens=input_tokens,
             estimated_output_tokens=output_tokens,
             estimated_cost_usd=model.estimate_cost(input_tokens, output_tokens),
-            meets_quality_bar=_QUALITY_RANK[model.quality_tier] >= _QUALITY_RANK[min_quality],
+            meets_quality_bar=QUALITY_RANK[model.quality_tier] >= QUALITY_RANK[min_quality],
         )
         for model in models
     ]

@@ -14,14 +14,8 @@ from dataclasses import dataclass
 
 from ..classifier.heuristic import classify
 from ..classifier.tiers import ComplexityTier
-from ..models.registry import ModelConfig, QualityTier, load_registry
+from ..models.registry import QUALITY_RANK, ModelConfig, QualityTier, load_registry
 from .cost_predictor import ESTIMATED_OUTPUT_TOKENS, MIN_QUALITY_FOR_TIER, estimate_input_tokens
-
-_QUALITY_ORDER = ["low", "medium", "high"]
-
-
-def _quality_rank(tier: QualityTier) -> int:
-    return _QUALITY_ORDER.index(tier.value)
 
 
 @dataclass
@@ -97,13 +91,13 @@ def select_model(
 
     input_tokens = estimate_input_tokens(prompt)
     output_tokens = ESTIMATED_OUTPUT_TOKENS[tier]
-    min_rank = _quality_rank(objectives.min_quality or MIN_QUALITY_FOR_TIER[tier])
+    min_rank = QUALITY_RANK[objectives.min_quality or MIN_QUALITY_FOR_TIER[tier]]
 
     eligible = [
         model
         for model in models
         if not (objectives.require_local and not model.local)
-        and _quality_rank(model.quality_tier) >= min_rank
+        and QUALITY_RANK[model.quality_tier] >= min_rank
         and not (objectives.max_latency_ms is not None and model.avg_latency_ms > objectives.max_latency_ms)
     ]
     excluded = len(models) - len(eligible)
@@ -115,7 +109,7 @@ def select_model(
 
     costs = [m.estimate_cost(input_tokens, output_tokens) for m in eligible]
     latencies = [m.avg_latency_ms for m in eligible]
-    qualities = [float(_quality_rank(m.quality_tier)) for m in eligible]
+    qualities = [float(QUALITY_RANK[m.quality_tier]) for m in eligible]
 
     cost_scores = _normalize(costs, higher_is_better=False)
     latency_scores = _normalize(latencies, higher_is_better=False)

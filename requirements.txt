@@ -1,10 +1,17 @@
-# Phase 1: unified model interface
 # Pinned to the versions actually installed and tested in this repo's venv.
 # Update this file whenever a new phase adds a dependency.
 
+# Phase 1: unified model interface
 PyYAML==6.0.3
 python-dotenv==1.2.2
 google-genai==2.12.1
 ollama==0.6.2
 openai==2.46.0
 anthropic==0.117.0
+
+# Phase 7: SQLite logging + Streamlit dashboard
+streamlit==1.60.0
+pandas==3.0.5
+
+# Phase 8: RAG (TF-IDF context compression + routing memory)
+scikit-learn==1.9.0

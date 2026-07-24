@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 from ..classifier.heuristic import TIER_2_MIN_SCORE, TIER_3_MIN_SCORE
 from ..classifier.tiers import ComplexityTier
+from ..models.registry import QUALITY_RANK
 from .cost_predictor import predict_cost
 from .routing_engine import RoutingResult
 
@@ -20,8 +21,6 @@ from .routing_engine import RoutingResult
 # heuristic-of-a-heuristic on purpose, same honesty rule as Phase 3's
 # refusal to show a fabricated quality percentage.
 _CONFIDENCE_SLOPE = 0.12
-
-_QUALITY_ORDER = ["low", "medium", "high"]
 
 
 def _confidence_from_score(tier: ComplexityTier, score: int) -> float:
@@ -85,8 +84,8 @@ def explain(routing_result: RoutingResult) -> RoutingExplanation:
     quality_delta = None
     if alternative is not None:
         cost_delta = chosen_cost - alternative.estimated_cost_usd
-        chosen_rank = _QUALITY_ORDER.index(chosen.quality_tier.value)
-        alt_rank = _QUALITY_ORDER.index(alternative.model_config.quality_tier.value)
+        chosen_rank = QUALITY_RANK[chosen.quality_tier]
+        alt_rank = QUALITY_RANK[alternative.model_config.quality_tier]
         if chosen_rank == alt_rank:
             quality_delta = "same quality tier"
         elif chosen_rank > alt_rank:

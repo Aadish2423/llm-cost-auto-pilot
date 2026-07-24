@@ -9,7 +9,7 @@ optimizing across cost, latency, quality, and data-locality, not cost alone.
 This is a portfolio/learning project built in phases. Status below reflects
 what's actually implemented right now, not the end-state design.
 
-## Status: Phase 6 — Async Quality Verification + Auto-escalation ✅
+## Status: Phase 9 — Simulation Mode + Live Benchmarking ✅
 
 ### Phase 1 — Unified Model Interface
 - A model registry (`config/model_registry.yaml`) describing every model the
@@ -214,6 +214,149 @@ what's actually implemented right now, not the end-state design.
   with mocked responses (identical text → agreement 1.0, no escalation;
   divergent text → agreement 0.21, correctly escalates and swaps the
   final response to the reference model).
+- **Hardening pass (fresh audit of Phases 5-6):** the quality-tier
+  ordering (`low` < `medium` < `high`) was independently redefined in
+  **three separate files** (`cost_predictor.py`, `explainer.py`,
+  `multi_objective.py`) — worse, `QualityTier`'s actual declaration order
+  in `registry.py` is `HIGH, MEDIUM, LOW`, the *opposite* of what all
+  three assumed. Not a live bug yet, but exactly the kind of thing that
+  silently drifts if a fourth tier is ever added and only one copy gets
+  updated. Consolidated into a single `QUALITY_RANK` dict in
+  `registry.py`; all three modules now import it. Verified behavior is
+  byte-for-byte identical before/after (`select_model_demo.py`'s scores
+  matched exactly).
+
+### Phase 7 — SQLite Logging + Streamlit Dashboard
+- `app/logging/db.py` — `log_request(routing_result, verification_result)`
+  writes one row per request to `data/requests.db`: prompt (hash *and*
+  full text — see deviation note below), response text, tier, routed
+  model, tokens, cost, latency, and — if verification ran — the
+  agreement score and escalation outcome. Also computes a
+  **baseline_cost_usd**: what the request would have cost on whatever
+  Tier 3 currently routes to, using the *actual* token counts from the
+  real response, not an estimate. This is what the dashboard's headline
+  savings number is built from.
+- **Deliberate deviation from the original spec:** it lists "prompt
+  hash" as the logged field (sensible for privacy at production scale).
+  This is a personal project with no real user data at stake, and the
+  dashboard's drill-down needs to show actual past requests to be useful
+  — so both `prompt_hash` (kept, matches the spec) and `prompt_text` /
+  `response_text` (added, for practical debugging/demo value) are
+  stored.
+- `scripts/run_and_log.py` — routes a prompt, verifies it, and logs the
+  full result in one call. This is what actually populates the
+  database; routing/verification alone (Phases 2-6) never persist
+  anything on their own.
+- `scripts/seed_demo_data.py` — dev utility that routes 15 varied
+  prompts directly through Ollama (the registry's static routing map
+  doesn't point anywhere live right now) and logs them, so the
+  dashboard has real data to show. **Deliberately skips verification**:
+  Tier 3's routing target is also Ollama's `llama3.2`, so "verifying"
+  would compare the routed model against itself and always
+  short-circuit to `already_top_tier` — not a real comparison. Faking a
+  second model just to manufacture demo variety would be less honest
+  than simply not running it; the verification mechanism itself is
+  already proven correct by Phase 6's deterministic tests.
+- `dashboard/app.py` — `streamlit run dashboard/app.py`. Shows the
+  headline cost-reduction percentage, routing/tier distribution charts,
+  escalation stats, a cost-over-time chart, and a drill-down into any
+  individual logged request (prompt, actual response, full metadata).
+  Read-only — computes nothing new, just visualizes what the logger
+  already wrote.
+- **Verified in an actual browser**, not just "it imports without
+  error": ran it against the 15 seeded Ollama requests and confirmed
+  real numbers rendered correctly — 100% cost reduction (every request
+  routed to $0 Ollama vs. a computed Tier-3 baseline of $0.0292),
+  correct tier/routing distribution, and the drill-down showing a real
+  generated response with accurate token counts and latency. Also
+  caught and fixed a real gap while building it: the schema never
+  actually stored the model's response text (only the prompt) — a
+  drill-down dashboard is far less useful if it can't show what the
+  model said. Fixed before any real data was persisted against the
+  broken schema.
+- **Hardening pass:** `use_container_width=True` is deprecated in the
+  installed Streamlit version (1.60.0) and past its stated removal
+  date — replaced with `width="stretch"` before it could start failing.
+
+### Phase 8 — RAG (Context Compression + Routing Memory)
+- `app/rag/compression.py` — `compress_context(query, document)` chunks
+  a long document (~200 words/chunk), scores each chunk's relevance to
+  the query via TF-IDF + cosine similarity, and keeps only the top-k
+  most relevant chunks, preserving original reading order. Verified with
+  a synthetic multi-topic "API documentation" text (auth, rate limits,
+  pricing, webhooks, error codes, changelog) — a query about 429 rate
+  limit errors correctly retrieved *only* the Rate Limits and Error
+  Codes sections (60.4% word-count reduction), correctly excluding
+  Authentication, Webhooks, and Pricing. A checkable, honest result, not
+  a cherry-picked one.
+- `app/rag/routing_memory.py` — `get_routing_memory_signal(prompt)`
+  retrieves the k most similar *past* logged requests (from Phase 7's
+  database) via the same TF-IDF approach, plus their verified outcomes
+  (tier, escalation rate) as an advisory second signal. Like Phase 3's
+  cost prediction and Phase 5's multi-objective scoring, this is
+  advisory only — it does not automatically feed into `route_request()`.
+  Verified against the 15 seeded requests: a query about a payment
+  ticket correctly ranked the one genuinely similar past prompt
+  ("classify this support ticket... charged twice") at similarity 0.33,
+  with everything else honestly scoring 0.00 (no shared vocabulary) —
+  exactly the expected behavior for lexical similarity.
+- **"Semantic," honestly:** both use TF-IDF (term frequency) + cosine
+  similarity, not real embeddings. That's **lexical** similarity — it
+  catches shared vocabulary, not shared meaning ("car" and "automobile"
+  won't match each other even though they mean the same thing). Chosen
+  over real embeddings deliberately: genuine semantic embeddings would
+  mean either a heavy new dependency (`sentence-transformers` + `torch`,
+  multi-gigabyte), another blocking Ollama model pull mid-project, or a
+  live Gemini API dependency we can't yet confirm works. TF-IDF needed
+  none of that and is a legitimate, if weaker, "custom scoring"
+  technique — documented as a known limitation and upgrade path, not
+  quietly oversold as more capable than it is.
+- `scripts/compress_context_demo.py` and `scripts/routing_memory_demo.py`
+  — CLI demos, both offline except routing memory's dependency on
+  Phase 7's logged history (run `seed_demo_data.py` first if empty).
+
+### Phase 9 — Simulation Mode + Live Benchmarking
+- `app/simulation/simulator.py` — `simulate(prompts)` replays a batch of
+  prompts against every "always use provider X's best model" baseline,
+  the static Phase 2 router, and Phase 5's multi-objective balanced
+  scorer, comparing total projected cost, latency, and quality mix.
+  Uses registry math throughout (Phase 3's token estimates, Phase 5's
+  scoring), not live calls — running N prompts against every strategy
+  live would need a working key for *every* provider and cost real
+  money per simulation run, defeating the point of a pre-flight
+  simulation.
+- **Real result from running this on 15 prompts:** the static router
+  saves **70.8%** vs. always using the most expensive strategy
+  (Claude Sonnet) — the actual headline number this whole project
+  exists to produce, and it fell out of real math, not a tuned demo.
+  It also showed Phase 5's multi-objective router beating Phase 2's
+  static router by a wide margin ($0.0029 vs. $0.0152) on the same
+  prompts — a genuine, unprompted validation that Phase 5's smarter
+  scoring outperforms Phase 2's fixed tier map.
+- `app/simulation/live_benchmark.py` — `benchmark_available_models()`
+  tests every model that actually has a working key against a couple of
+  real prompts and reports measured latency vs. what
+  `model_registry.yaml` assumes. **On-demand, not scheduled** — there's
+  no cron/scheduler infrastructure in this project, so "live
+  benchmarking" here means "run this command for fresh numbers
+  whenever you want them," not an automatic periodic refresh. Doesn't
+  rewrite the registry automatically either — same "predicts and
+  surfaces, doesn't auto-edit config" pattern as Phase 3/5.
+- **Real finding from running this:** Ollama's measured latency was
+  3308ms against the registry's static 800ms assumption — a genuine
+  +2508ms drift, consistent with the partial GPU/CPU split found
+  earlier in this project. A concrete example of exactly the kind of
+  thing this phase exists to catch.
+- **Hardening pass (shared-code consolidation):** `test_providers.py`
+  had its own local `is_available()` helper checking whether a model's
+  key is present; `live_benchmark.py` needed the identical check. Rather
+  than duplicate it a second time, moved it into `registry.py` as
+  `is_model_available()` — the same fix pattern as `QUALITY_RANK` above.
+  `test_providers.py` re-verified working against the shared version
+  before and after (Ollama 10/10 ok, everything else skipping/failing
+  identically).
+- `scripts/simulate_demo.py` (offline) and `scripts/live_benchmark_demo.py`
+  (makes real calls to whatever has a working key) — CLI demos.
 
 **Live/tested:** Gemini (you have a key for this). Ollama (`llama3.2`,
 installed and pulled locally — verified end-to-end through
@@ -319,6 +462,37 @@ Routes the prompt for real, then verifies it against the strongest
 configured model and reports whether it escalated. Makes up to two live
 provider calls.
 
+```
+python scripts/run_and_log.py "Your prompt here"
+python scripts/seed_demo_data.py
+streamlit run dashboard/app.py
+```
+
+The first routes+verifies+logs one real request to `data/requests.db`.
+The second populates it with 15 varied requests via Ollama in one go
+(no keys needed). The third opens the cost dashboard in your browser —
+run it after at least one of the first two.
+
+```
+python scripts/compress_context_demo.py "your query"
+python scripts/routing_memory_demo.py "your prompt"
+```
+
+Context compression (offline, no keys) shows a long synthetic document
+getting cut down to just the chunks relevant to your query. Routing
+memory (needs logged history — run `seed_demo_data.py` first) shows the
+most similar past requests to a new prompt.
+
+```
+python scripts/simulate_demo.py
+python scripts/live_benchmark_demo.py
+```
+
+Simulation mode (offline, no keys) replays 15 prompts across every
+routing strategy and reports the cost-savings comparison. Live
+benchmarking makes real calls to whatever providers currently have a
+working key and reports measured vs. assumed latency.
+
 ## Repo structure
 
 ```
@@ -327,7 +501,7 @@ config/
   routing_config.yaml   tier -> provider/model map
 app/
   models/
-    registry.py          ModelConfig dataclass + YAML loader + cost math
+    registry.py          ModelConfig, QUALITY_RANK, is_model_available(), YAML loader + cost math
     response.py           standardized LLMResponse
     dispatcher.py          send_request() — the one function everything else calls
     providers/
@@ -346,6 +520,16 @@ app/
     explainer.py            explain() — tier/confidence/signals/alternative writeup
     multi_objective.py      select_model() — weighted cost/latency/quality scoring
     verifier.py              verify_and_escalate() — reference-check + auto-escalation
+  logging/
+    db.py                  SQLite schema, log_request(), get_summary() and friends
+  rag/
+    compression.py          compress_context() — TF-IDF chunk retrieval
+    routing_memory.py       get_routing_memory_signal() — similar-past-request lookup
+  simulation/
+    simulator.py            simulate() — strategy comparison over a prompt batch
+    live_benchmark.py       benchmark_available_models() — real-call latency snapshot
+dashboard/
+  app.py                  Streamlit cost dashboard (streamlit run dashboard/app.py)
 scripts/
   test_providers.py      Phase 1 validation harness
   test_classifier.py     Phase 2 offline classifier sanity check
@@ -353,9 +537,16 @@ scripts/
   explain_routing.py     Phase 4 explanation CLI demo (makes a real provider call)
   select_model_demo.py   Phase 5 multi-objective CLI demo
   verify_routing.py      Phase 6 verification CLI demo (makes real provider calls)
+  run_and_log.py         Phase 7 route + verify + log pipeline
+  seed_demo_data.py      Phase 7 dev utility — populates data/requests.db via Ollama
+  compress_context_demo.py  Phase 8a context compression CLI demo
+  routing_memory_demo.py    Phase 8b routing memory CLI demo (needs logged history)
+  simulate_demo.py       Phase 9a simulation CLI demo
+  live_benchmark_demo.py Phase 9b live benchmark CLI demo (makes real provider calls)
 data/
   phase1_test_results.json  (generated; kept as a portfolio artifact)
   labeled_prompts.csv        (empty header, waiting for your hand-labels)
+  requests.db                 (generated, gitignored — Phase 7's audit trail)
 ```
 
 ## Known limitations / things to verify
@@ -431,6 +622,24 @@ data/
   not already on the top tier (one for the route, one for the reference
   check) — real cost to be aware of if you run it at volume, since it's
   fully synchronous right now (see the "async, honestly" note above).
+- `data/requests.db` currently only has data from `seed_demo_data.py`
+  (all Ollama, all tier classifications, no verification) plus whatever
+  you've logged yourself via `run_and_log.py`. The dashboard's numbers
+  are only as representative as what's actually been logged — 15 Ollama
+  calls is enough to prove the mechanism works, not enough to draw real
+  conclusions from.
+- Phase 8's TF-IDF similarity is lexical, not semantic (see the "Phase 8"
+  section above) — it will miss genuinely related prompts that don't
+  share vocabulary, and can be fooled by shared words in unrelated
+  contexts. Routing memory's signal is advisory only; nothing in the
+  router currently acts on it automatically.
+- Phase 9's `simulate()` costs are projections (Phase 3/5's estimation
+  logic), not measurements — treat the 70.8% savings figure as "what the
+  math says," reproducible and inspectable, but not the same class of
+  claim as `live_benchmark.py`'s measured latency numbers.
+- `live_benchmark_demo.py` only benchmarks models with a working key —
+  right now that's Ollama alone, so the "measured vs. assumed" comparison
+  is only meaningful for one model until more keys are added.
 
 ## Roadmap
 
@@ -444,19 +653,21 @@ Build order:
 5. Multi-objective optimization (cost/latency/quality/data-locality) — **done**
 6. Async quality verification + auto-escalation — **done** (synchronous
    for now — genuinely async needs Phase 10's background worker)
-7. SQLite logging + Streamlit cost dashboard
-8. **RAG** — added after deciding the core loop (2–7) needed to be solid first:
-   - **Context compression**: chunk/embed/retrieve only the relevant pieces
-     of a long document before it's sent to any model, instead of sending
-     the whole thing. Directly cuts token cost on long-context requests —
-     ties straight into the dashboard's savings metric.
-   - **Routing memory** (built after compression): embed each incoming
-     prompt and retrieve the k most similar past requests plus their
-     *verified* outcomes (which model actually succeeded/failed per the
-     Phase 6 verifier) as a second signal alongside the classifier. Needs
-     real logged history to be useful, which is why it comes after
-     compression, not before.
-9. Simulation mode + live benchmarking
+7. SQLite logging + Streamlit cost dashboard — **done**
+8. **RAG** — **done** (TF-IDF, not real embeddings — see the Phase 8
+   section above for why):
+   - **Context compression**: chunk/retrieve only the relevant pieces of
+     a long document before it's sent to any model, instead of sending
+     the whole thing. Verified with a checkable synthetic example
+     (60.4% reduction, correctly kept only the relevant sections).
+   - **Routing memory**: retrieve the k most similar past requests plus
+     their verified outcomes as an advisory second signal. Needs real
+     logged history to be useful, which is why it's built on top of
+     Phase 7's database.
+9. Simulation mode + live benchmarking — **done** (simulation found the
+   router saves 70.8% vs. the most expensive strategy on 15 real
+   prompts; live benchmarking found Ollama's measured latency drifts
+   +2508ms from the registry's static assumption)
 10. FastAPI service + Docker
 11. Load test + portfolio write-up
 

@@ -9,7 +9,6 @@ Usage:
 """
 
 import json
-import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -23,7 +22,7 @@ sys.path.insert(0, str(ROOT))
 load_dotenv(ROOT / ".env", override=True)
 
 from app.models.dispatcher import send_request  # noqa: E402
-from app.models.registry import load_registry  # noqa: E402
+from app.models.registry import is_model_available, load_registry  # noqa: E402
 
 TEST_PROMPTS = [
     "What is the capital of France?",
@@ -58,20 +57,6 @@ def format_table(rows: list[list[str]], headers: list[str]) -> str:
     return "\n".join(lines)
 
 
-def is_available(model) -> tuple[bool, str]:
-    if model.local:
-        return True, ""
-    env_var = {
-        "gemini": "GEMINI_API_KEY",
-        "openai": "OPENAI_API_KEY",
-        "anthropic": "ANTHROPIC_API_KEY",
-        "groq": "GROQ_API_KEY",
-        "together": "TOGETHER_API_KEY",
-    }.get(model.provider)
-    if env_var and not os.environ.get(env_var):
-        return False, f"missing {env_var}"
-    return True, ""
-
 
 def main() -> None:
     registry = load_registry()
@@ -79,7 +64,7 @@ def main() -> None:
     summary_rows = []
 
     for model in registry:
-        available, reason = is_available(model)
+        available, reason = is_model_available(model)
         if not available:
             print(f"SKIPPED {model.key} ({reason})")
             summary_rows.append([model.key, "skipped", reason, "-", "-", "-"])
