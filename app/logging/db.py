@@ -73,7 +73,13 @@ def _baseline_cost(routing_result: RoutingResult) -> tuple[str | None, str | Non
     try:
         provider, model_id = load_routing_map()[ComplexityTier.TIER_3]
         baseline_model = get_model(provider, model_id)
-    except (ValueError, FileNotFoundError):
+    except Exception:
+        # Belt-and-suspenders, same pattern as dispatcher.py's catch-all:
+        # route_request() already read this same config successfully to
+        # get this far, so a failure here should be near-impossible in
+        # practice — but logging a request should never itself crash
+        # because of a config-reading hiccup, so degrade to "no baseline"
+        # instead of raising.
         return None, None, None
     cost = baseline_model.estimate_cost(response.input_tokens, response.output_tokens)
     return provider, model_id, cost

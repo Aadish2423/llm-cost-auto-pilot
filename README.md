@@ -9,7 +9,7 @@ optimizing across cost, latency, quality, and data-locality, not cost alone.
 This is a portfolio/learning project built in phases. Status below reflects
 what's actually implemented right now, not the end-state design.
 
-## Status: Phase 9 — Simulation Mode + Live Benchmarking ✅
+## Status: All 11 Phases Complete ✅
 
 ### Phase 1 — Unified Model Interface
 - A model registry (`config/model_registry.yaml`) describing every model the
@@ -357,6 +357,90 @@ what's actually implemented right now, not the end-state design.
   identically).
 - `scripts/simulate_demo.py` (offline) and `scripts/live_benchmark_demo.py`
   (makes real calls to whatever has a working key) — CLI demos.
+- **Hardening pass (fresh audit of Phases 7-9):** three small but real
+  fixes. `db.py`'s baseline-cost lookup only caught `ValueError`/
+  `FileNotFoundError`, missing `yaml.YAMLError` from a malformed
+  routing config — broadened to a catch-all, matching `dispatcher.py`'s
+  belt-and-suspenders pattern (low practical risk, since `route_request()`
+  already reads the same file successfully earlier in the same call, but
+  logging a request should never itself be able to crash). `compression.py`
+  defined a `CHARS_PER_TOKEN_ESTIMATE` constant that was never actually
+  used — the token estimate properties used a different, un-labeled ratio
+  instead; removed the dead constant and clarified the comment.
+  `simulator.py` found its own router result by string-matching a
+  strategy name (`s.name.startswith("router (static tier map...")`) — a
+  silent `StopIteration` crash waiting to happen if that name is ever
+  edited; replaced with a direct object reference. All three verified
+  with no behavior change (`simulate_demo.py`'s 70.8% figure identical
+  before/after; `run_and_log.py` still logs correctly).
+
+### Phase 10 — FastAPI Service + Docker
+- `app/api/main.py` — a real HTTP API, run with `uvicorn app.api.main:app`
+  from the project root:
+  - `POST /v1/completions` — routes a prompt (Phase 2), optionally runs
+    Phase 6 verification (`"verify": true`), optionally logs to Phase 7's
+    database (`"log": true`, the default), and returns the response plus
+    routing metadata. You don't choose the model; the router does.
+  - `GET /v1/models` — every registered model's pricing/latency/quality
+    tier plus whether it's actually callable right now (`is_model_available()`).
+  - `GET /v1/stats` — Phase 7's `get_summary()` as JSON: cost, baseline,
+    savings %, escalation rate.
+  - `PUT /v1/routing-config` — repoints a tier to a different provider/model
+    **without redeploying**, validating the tier name and that the model
+    actually exists in the registry first (400 with a clear message
+    otherwise).
+- **All four endpoints verified live**, not just "it imports without
+  error" — started the server, hit every endpoint with real HTTP
+  requests (`GET`s via browser navigation, `POST`/`PUT`s via `fetch`),
+  and confirmed: `/v1/models` returns all 12 registry entries with
+  correct availability flags; `/v1/completions` with `verify: true`
+  produced a real Ollama response, attempted verification, and logged
+  row #19; both `PUT` validation error paths return clean `400`s with
+  the exact error messages `get_model()` and the `ComplexityTier` enum
+  already produce.
+- **A real, kept change, not just a test:** used `PUT /v1/routing-config`
+  to actually point Tier 1 at Ollama — the choice Phase 3, Phase 5, and
+  Phase 9 each independently found was better, but that nothing had
+  wired in yet. `routing_config.yaml`'s explanatory comments (stripped
+  by the endpoint's `yaml.dump`, a documented PyYAML limitation) were
+  restored by hand afterward with a note explaining why Tier 1 changed.
+  Tiers 2/3 still point at Gemini, untested live pending a working key.
+- `Dockerfile` / `docker-compose.yml` (`api` + `dashboard` services,
+  sharing one image, both mounting `./data` and `./config`) —
+  **written but not build-tested**: Docker isn't installed in this
+  environment. Written carefully against standard, well-documented
+  patterns and flagged honestly rather than claimed as verified, same
+  as the untested OpenAI/Anthropic adapters back in Phase 1. No
+  separate "worker" service — Phase 6's verification is synchronous
+  and runs inline in the API process; a placeholder service that did
+  nothing would be decoration, not honesty.
+
+### Phase 11 — Load Test + Portfolio Write-up
+- `scripts/load_test.py` — generates a batch of programmatically-varied
+  prompts (16 topics × 12 templates spanning all three tiers) and pushes
+  them through the full route+log pipeline, printing final aggregate
+  cost/savings numbers.
+- **Scope, honestly:** the original design calls for 500-1,000 prompts.
+  This session ran **40** live — Ollama is the only consistently free
+  live provider available, and sequential calls average several seconds
+  each on this hardware, so 500-1,000 would take multiple hours. The
+  script itself scales to any `--count`; this is a documented scope
+  decision, not a shortcut taken quietly.
+- **Real run result:** 17/40 succeeded (only Tier 1 requests — Tier 2/3
+  route to Gemini, which has no working key here, so they failed
+  cleanly exactly as designed). Combined with earlier development runs,
+  `data/requests.db` now holds 62 real logged requests, $0.045686 saved,
+  100% cost reduction — with the honest caveat that 100% only holds
+  because the sole currently-working tier is also the free one. See
+  `CASE_STUDY.md` for the fuller, more representative headline number
+  (Phase 9's 70.8% simulation, which reflects real pricing across every
+  registered provider, not just whichever one has a key today).
+- `CASE_STUDY.md` — the portfolio-facing write-up: problem, approach,
+  the feedback loop, RAG as a cost lever, and — deliberately included
+  rather than omitted — a "what's honestly still missing" section
+  naming the two gaps a careful reader would find anyway (quality-parity
+  claims need a second working paid key; the better-performing Phase 5
+  router isn't wired in as the default yet).
 
 **Live/tested:** Gemini (you have a key for this). Ollama (`llama3.2`,
 installed and pulled locally — verified end-to-end through
@@ -493,6 +577,26 @@ routing strategy and reports the cost-savings comparison. Live
 benchmarking makes real calls to whatever providers currently have a
 working key and reports measured vs. assumed latency.
 
+```
+uvicorn app.api.main:app --reload
+```
+
+Starts the API on http://localhost:8000 (interactive docs at `/docs`).
+Run from the project root. Try:
+```
+curl http://localhost:8000/v1/models
+curl -X POST http://localhost:8000/v1/completions -H "Content-Type: application/json" -d "{\"prompt\": \"What is the capital of Spain?\", \"verify\": true}"
+```
+
+```
+python scripts/load_test.py --count 50
+```
+
+Runs a batch of programmatically-varied prompts through the full
+route+log pipeline and prints the final cost-savings numbers — the
+actual portfolio deliverable. See the Phase 11 section above for the
+real numbers from this session's run.
+
 ## Repo structure
 
 ```
@@ -528,6 +632,9 @@ app/
   simulation/
     simulator.py            simulate() — strategy comparison over a prompt batch
     live_benchmark.py       benchmark_available_models() — real-call latency snapshot
+  api/
+    main.py                 FastAPI app: /v1/completions, /v1/models, /v1/stats, /v1/routing-config
+    schemas.py               Pydantic request/response models
 dashboard/
   app.py                  Streamlit cost dashboard (streamlit run dashboard/app.py)
 scripts/
@@ -543,10 +650,13 @@ scripts/
   routing_memory_demo.py    Phase 8b routing memory CLI demo (needs logged history)
   simulate_demo.py       Phase 9a simulation CLI demo
   live_benchmark_demo.py Phase 9b live benchmark CLI demo (makes real provider calls)
+  load_test.py            Phase 11 load test — final cost-savings numbers
 data/
   phase1_test_results.json  (generated; kept as a portfolio artifact)
   labeled_prompts.csv        (empty header, waiting for your hand-labels)
   requests.db                 (generated, gitignored — Phase 7's audit trail)
+Dockerfile / docker-compose.yml / .dockerignore   Phase 10 (untested — no Docker here)
+CASE_STUDY.md            Phase 11 portfolio write-up
 ```
 
 ## Known limitations / things to verify
@@ -580,12 +690,13 @@ data/
   on inflected prompts. Acceptable for a rule-based v1 (the scikit-learn
   v2 classifier won't have this limitation), but worth knowing if a tier
   assignment looks off.
-- Routing map (`config/routing_config.yaml`) currently points Tier 1 at
-  Groq and Tiers 2/3 at Gemini. Every one of those calls will fail with a
-  clean error until you've actually added `GEMINI_API_KEY` / `GROQ_API_KEY`
-  to `.env` — `route_request()` still returns a full `RoutingResult` in
-  that case, just with `response.error` set, so this is expected, not a
-  bug, until keys are added.
+- Routing map (`config/routing_config.yaml`) now points Tier 1 at Ollama
+  (updated via the Phase 10 API, live/working) and Tiers 2/3 at Gemini
+  (still no working key here). Tier 2/3 calls will fail with a clean
+  error until `GEMINI_API_KEY` is added to `.env` — `route_request()`
+  still returns a full `RoutingResult` in that case, just with
+  `response.error` set, so this is expected, not a bug, until a key is
+  added.
 - `predict_cost.py`'s output-token estimate is a flat number per
   complexity tier (80/250/500), not per-model or per-prompt — a terse
   Tier 2 prompt and a verbose one get the same output estimate today.
@@ -622,12 +733,14 @@ data/
   not already on the top tier (one for the route, one for the reference
   check) — real cost to be aware of if you run it at volume, since it's
   fully synchronous right now (see the "async, honestly" note above).
-- `data/requests.db` currently only has data from `seed_demo_data.py`
-  (all Ollama, all tier classifications, no verification) plus whatever
-  you've logged yourself via `run_and_log.py`. The dashboard's numbers
-  are only as representative as what's actually been logged — 15 Ollama
-  calls is enough to prove the mechanism works, not enough to draw real
-  conclusions from.
+- `data/requests.db` has 62 real logged requests as of Phase 11's load
+  test (15 seeded + individual test/demo runs + a 40-prompt load test,
+  17 of which succeeded — the rest correctly failed on Tier 2/3's
+  missing Gemini key). The dashboard's numbers are only as representative
+  as what's actually been logged — enough to prove the mechanism works
+  end-to-end, not enough volume to draw statistically meaningful
+  conclusions from. `CASE_STUDY.md` is explicit about this caveat rather
+  than presenting the 100%-savings figure without context.
 - Phase 8's TF-IDF similarity is lexical, not semantic (see the "Phase 8"
   section above) — it will miss genuinely related prompts that don't
   share vocabulary, and can be fooled by shared words in unrelated
@@ -640,6 +753,25 @@ data/
 - `live_benchmark_demo.py` only benchmarks models with a working key —
   right now that's Ollama alone, so the "measured vs. assumed" comparison
   is only meaningful for one model until more keys are added.
+- `PUT /v1/routing-config` overwrites `config/routing_config.yaml` via
+  `yaml.dump`, which does not preserve comments — every call strips the
+  file's explanatory notes. This already happened once during Phase 10
+  testing; the comments were restored by hand afterward. If you call
+  this endpoint yourself, expect to lose the comments again.
+- `Dockerfile` / `docker-compose.yml` are written but **not
+  build-tested** — Docker isn't installed in this environment. They
+  follow standard, well-documented patterns, but treat them the same
+  way as the untested OpenAI/Anthropic adapters: probably fine,
+  unverified, worth a real `docker compose up` before trusting them for
+  anything important.
+- `load_test.py`'s 40-prompt run is a scope-reduced stand-in for the
+  original 500-1,000 prompt target (see Phase 11 section above for why)
+  — the script scales, the demonstrated run doesn't reach that volume.
+- The 100% savings figure from the load test is real but narrow: it
+  holds only because the sole currently-working live tier (Tier 1 →
+  Ollama) is also the free one. Treat Phase 9's 70.8% simulation figure
+  as the more representative claim — it reflects real pricing across
+  every registered provider, not just whichever one has a key today.
 
 ## Roadmap
 
@@ -652,7 +784,9 @@ Build order:
 4. Explainable routing — **done**
 5. Multi-objective optimization (cost/latency/quality/data-locality) — **done**
 6. Async quality verification + auto-escalation — **done** (synchronous
-   for now — genuinely async needs Phase 10's background worker)
+   for now — Phase 10 shipped the API but deliberately not a background
+   worker either; see Phase 10's section above for why a placeholder
+   worker would've been decoration, not a real fix)
 7. SQLite logging + Streamlit cost dashboard — **done**
 8. **RAG** — **done** (TF-IDF, not real embeddings — see the Phase 8
    section above for why):
@@ -668,8 +802,17 @@ Build order:
    router saves 70.8% vs. the most expensive strategy on 15 real
    prompts; live benchmarking found Ollama's measured latency drifts
    +2508ms from the registry's static assumption)
-10. FastAPI service + Docker
-11. Load test + portfolio write-up
+10. FastAPI service + Docker — **done** (API fully verified live against
+    real HTTP requests; Docker files written but not build-tested — no
+    Docker in this environment)
+11. Load test + portfolio write-up — **done** (40 real prompts, scope
+    reduced from the original 500-1,000 — see Phase 11 section above;
+    `CASE_STUDY.md` is the portfolio write-up)
+
+**All 11 phases of the original build plan are now implemented.**
+Remaining work is depth, not breadth: a real second live provider key,
+the scikit-learn v2 classifier upgrade (blocked on hand-labeling), and
+the items below that were always explicitly out of scope for v1.
 
 Explicitly deferred past v1 (documented here so they're not forgotten,
 not because they're bad ideas):

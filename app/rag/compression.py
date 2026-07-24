@@ -17,8 +17,6 @@ from dataclasses import dataclass
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-CHARS_PER_TOKEN_ESTIMATE = 4  # matches cost_predictor.py's rule of thumb
-
 
 def chunk_text(text: str, chunk_size_words: int = 200) -> list[str]:
     words = text.split()
@@ -40,7 +38,11 @@ class CompressionResult:
 
     @property
     def original_est_tokens(self) -> int:
-        return max(1, round(self.original_word_count / 0.75))  # ~0.75 words/token, rough
+        # ~0.75 words/token (the common inverse of "~1.3 tokens/word" for
+        # English) — a different, independent rough estimate from Phase
+        # 3's ~4-chars/token rule, since only word counts are stored here,
+        # not the original document's raw character count.
+        return max(1, round(self.original_word_count / 0.75))
 
     @property
     def compressed_est_tokens(self) -> int:

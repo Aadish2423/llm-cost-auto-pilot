@@ -1,14 +1,20 @@
 # Maps each complexity tier to the model that should handle it. Change the
-# provider/model_id here to repoint a tier without touching any code.
+# provider/model_id here to repoint a tier without touching any code (or
+# call PUT /v1/routing-config on the Phase 10 API, which edits this file
+# for you — but strips these comments when it does, since PyYAML's dump
+# doesn't preserve them; that's why they're being restored by hand here).
 #
-# Defaults below deliberately point at providers that are actually
-# live-tested (Gemini) or free-tier (Groq) — see README for provider
-# status. Swap in OpenAI/Anthropic models once those keys are added.
+# Tier 1 -> Ollama: Phase 3, Phase 5, and Phase 9 independently found this
+# is the actually-best choice (free, meets the tier's quality bar, and is
+# the only provider with a consistently working key in this environment)
+# — updated via the Phase 10 API as a real test of PUT /v1/routing-config,
+# not just a demo. Tiers 2/3 still point at Gemini (untested live here —
+# no working key yet) pending you adding GEMINI_API_KEY to .env.
 
 routing:
   tier_1:
-    provider: groq
-    model_id: llama-3.1-8b-instant
+    provider: ollama
+    model_id: llama3.2
 
   tier_2:
     provider: gemini

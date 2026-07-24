@@ -14,7 +14,7 @@ only against whichever providers actually have keys.
 from dataclasses import dataclass, field
 
 from ..classifier.heuristic import classify
-from ..models.registry import QUALITY_RANK, ModelConfig, load_registry
+from ..models.registry import QUALITY_RANK, ModelConfig, get_model, load_registry
 from ..router.cost_predictor import ESTIMATED_OUTPUT_TOKENS, estimate_input_tokens
 from ..router.multi_objective import BALANCED, select_model
 from ..router.routing_engine import load_routing_map
@@ -72,8 +72,6 @@ def _simulate_fixed_model(prompts: list[str], model: ModelConfig) -> StrategyRes
 
 
 def _simulate_static_router(prompts: list[str]) -> StrategyResult:
-    from ..models.registry import get_model
-
     routing_map = load_routing_map()
     total_cost = 0.0
     total_latency = 0.0
@@ -126,16 +124,16 @@ def simulate(prompts: list[str]) -> SimulationReport:
         raise ValueError("simulate() needs at least one prompt")
 
     registry = load_registry()
+    static_router_result = _simulate_static_router(prompts)
     strategies = [_simulate_fixed_model(prompts, model) for model in _best_model_per_provider(registry).values()]
-    strategies.append(_simulate_static_router(prompts))
+    strategies.append(static_router_result)
     strategies.append(_simulate_multi_objective(prompts, registry))
 
     cheapest = min(strategies, key=lambda s: s.total_cost_usd)
     most_expensive = max(strategies, key=lambda s: s.total_cost_usd)
 
-    router = next(s for s in strategies if s.name.startswith("router (static tier map"))
     savings_pct = (
-        (most_expensive.total_cost_usd - router.total_cost_usd) / most_expensive.total_cost_usd * 100
+        (most_expensive.total_cost_usd - static_router_result.total_cost_usd) / most_expensive.total_cost_usd * 100
         if most_expensive.total_cost_usd > 0
         else 0.0
     )

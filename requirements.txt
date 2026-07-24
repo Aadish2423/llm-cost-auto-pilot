@@ -15,3 +15,8 @@ pandas==3.0.5
 
 # Phase 8: RAG (TF-IDF context compression + routing memory)
 scikit-learn==1.9.0
+
+# Phase 10: FastAPI service
+fastapi==0.139.2
+uvicorn[standard]==0.51.0
+pydantic==2.13.4

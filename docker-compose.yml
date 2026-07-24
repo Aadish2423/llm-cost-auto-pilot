@@ -1,0 +1,37 @@
+# NOTE: the original design calls for "API service + background worker +
+# SQLite" services. There's no background worker here — Phase 6's
+# verification is synchronous (see app/router/verifier.py's docstring),
+# called inline by the API request handler, not a separate queued
+# process. Adding an empty placeholder "worker" service just to match the
+# original shape would be decoration, not honesty, so it's omitted;
+# SQLite needs no service of its own either (it's a file, shared via the
+# ./data volume below).
+#
+# Requires a real .env file (copy .env.example -> .env and fill in your
+# keys first) — docker compose fails fast with a clear error if it's
+# missing, rather than silently starting with no keys.
+
+services:
+  api:
+    build: .
+    command: uvicorn app.api.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  dashboard:
+    build: .
+    command: streamlit run dashboard/app.py --server.address 0.0.0.0 --server.port 8501
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    env_file:
+      - .env
+    restart: unless-stopped
