@@ -51,11 +51,35 @@ CREATE TABLE IF NOT EXISTS requests (
 );
 """
 
+# Hybrid (on-device / cloud) routing columns, added to existing databases
+# in place so rows logged before the hybrid router keep working.
+HYBRID_COLUMNS = {
+    "placement": "TEXT",  # on_device | cloud | blocked (NULL for pre-hybrid rows)
+    "routing_reason": "TEXT",
+    "privacy_locked": "INTEGER NOT NULL DEFAULT 0",
+    "privacy_categories": "TEXT",  # comma-separated finding kinds, never the values
+    "on_device_runtime": "TEXT",
+    "fallback": "TEXT",
+    "redacted": "INTEGER NOT NULL DEFAULT 0",
+}
+
+LOCAL_PROVIDERS = ("ollama", "foundry_local")
+
+# Pre-hybrid rows have no placement; infer it from the provider.
+PLACEMENT_SQL = (
+    "COALESCE(placement, CASE WHEN provider IN ('ollama', 'foundry_local') "
+    "THEN 'on_device' ELSE 'cloud' END)"
+)
+
 
 def init_db(path: Path = DB_PATH) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with closing(sqlite3.connect(path)) as conn:
         conn.execute(SCHEMA)
+        existing = {row[1] for row in conn.execute("PRAGMA table_info(requests)")}
+        for column, ddl in HYBRID_COLUMNS.items():
+            if column not in existing:
+                conn.execute(f"ALTER TABLE requests ADD COLUMN {column} {ddl}")
         conn.commit()
 
 
@@ -107,6 +131,13 @@ class LoggedRequest:
     agreement_score: float | None
     escalated: bool
     escalation_cost_usd: float
+    placement: str = "cloud"
+    routing_reason: str | None = None
+    privacy_locked: bool = False
+    privacy_categories: str | None = None
+    on_device_runtime: str | None = None
+    fallback: str | None = None
+    redacted: bool = False
 
 
 def log_request(
@@ -123,6 +154,22 @@ def log_request(
     escalated = bool(verification_result and verification_result.escalated)
     escalation_cost = verification_result.cost_delta_usd if verification_result else 0.0
 
+    # Hybrid routing metadata (duck-typed so plain RoutingResults still log).
+    privacy = getattr(routing_result, "privacy", None)
+    placement = getattr(routing_result, "placement", None) or (
+        "on_device" if routing_result.model_config.provider in LOCAL_PROVIDERS else "cloud"
+    )
+    prompt_text, response_text, redacted = routing_result.prompt, response.text, False
+    if privacy is not None and privacy.sensitive:
+        from ..privacy.guard import load_hybrid_config, scan
+
+        if load_hybrid_config()["privacy"].get("redact_logs", True):
+            # Personal data never reaches the log: store the masked prompt,
+            # and mask anything the model echoed back.
+            prompt_text = privacy.redacted
+            response_text = scan(response.text).redacted if response.text else ""
+            redacted = True
+
     with closing(sqlite3.connect(path)) as conn:
         cursor = conn.execute(
             """
@@ -131,14 +178,15 @@ def log_request(
                 provider, model_id, input_tokens, output_tokens, cost_usd,
                 latency_ms, ok, error, baseline_provider, baseline_model_id,
                 baseline_cost_usd, verification_status, agreement_score,
-                escalated, escalation_cost_usd
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                escalated, escalation_cost_usd, placement, routing_reason,
+                privacy_locked, privacy_categories, on_device_runtime, fallback, redacted
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 datetime.now(timezone.utc).isoformat(),
                 hashlib.sha256(routing_result.prompt.encode("utf-8")).hexdigest(),
-                routing_result.prompt,
-                response.text,
+                prompt_text,
+                response_text,
                 routing_result.tier.value,
                 routing_result.score,
                 routing_result.model_config.provider,
@@ -156,6 +204,13 @@ def log_request(
                 agreement_score,
                 int(escalated),
                 escalation_cost,
+                placement,
+                getattr(routing_result, "reason", None),
+                int(bool(getattr(routing_result, "privacy_locked", False))),
+                ",".join(privacy.categories) if privacy and privacy.categories else None,
+                getattr(routing_result, "on_device_runtime", None),
+                getattr(routing_result, "fallback", None),
+                int(redacted),
             ),
         )
         conn.commit()
@@ -175,9 +230,13 @@ def get_summary(path: Path = DB_PATH) -> dict:
                 COALESCE(SUM(baseline_cost_usd), 0.0) AS total_baseline_cost_usd,
                 COALESCE(SUM(escalation_cost_usd), 0.0) AS total_verification_cost_usd,
                 COALESCE(SUM(escalated), 0) AS escalation_count,
-                COALESCE(SUM(CASE WHEN verification_status IS NOT NULL THEN 1 ELSE 0 END), 0) AS verified_count
+                COALESCE(SUM(CASE WHEN verification_status IS NOT NULL THEN 1 ELSE 0 END), 0) AS verified_count,
+                COALESCE(SUM(CASE WHEN {placement} = 'on_device' THEN 1 ELSE 0 END), 0) AS on_device_count,
+                COALESCE(SUM(CASE WHEN {placement} = 'cloud' THEN 1 ELSE 0 END), 0) AS cloud_count,
+                COALESCE(SUM(CASE WHEN {placement} = 'blocked' THEN 1 ELSE 0 END), 0) AS blocked_count,
+                COALESCE(SUM(privacy_locked), 0) AS privacy_locked_count
             FROM requests
-            """
+            """.format(placement=PLACEMENT_SQL)
         ).fetchone()
 
     total_requests = row["total_requests"]
@@ -198,6 +257,11 @@ def get_summary(path: Path = DB_PATH) -> dict:
         "verified_count": row["verified_count"],
         "escalation_count": row["escalation_count"],
         "escalation_rate_pct": escalation_rate,
+        "on_device_count": row["on_device_count"],
+        "cloud_count": row["cloud_count"],
+        "blocked_count": row["blocked_count"],
+        "on_device_pct": (row["on_device_count"] / total_requests * 100) if total_requests else 0.0,
+        "privacy_locked_count": row["privacy_locked_count"],
     }
 
 
@@ -256,6 +320,13 @@ def get_recent_requests(limit: int = 50, path: Path = DB_PATH) -> list[LoggedReq
             agreement_score=row["agreement_score"],
             escalated=bool(row["escalated"]),
             escalation_cost_usd=row["escalation_cost_usd"],
+            placement=row["placement"] or ("on_device" if row["provider"] in LOCAL_PROVIDERS else "cloud"),
+            routing_reason=row["routing_reason"],
+            privacy_locked=bool(row["privacy_locked"]),
+            privacy_categories=row["privacy_categories"],
+            on_device_runtime=row["on_device_runtime"],
+            fallback=row["fallback"],
+            redacted=bool(row["redacted"]),
         )
         for row in rows
     ]

@@ -1,0 +1,22 @@
+# Hybrid on-device / cloud routing — the Snapdragon edition of the router.
+#
+# Every prompt is scanned by the on-device privacy guard first. Prompts with
+# personal data never leave the machine; everything else goes on-device when
+# the local model meets the tier's quality bar (cost_predictor
+# MIN_QUALITY_FOR_TIER), otherwise to the cloud model in routing_config.yaml.
+
+privacy:
+  lock_on_severity: medium    # findings at/above this keep the prompt on-device (high | medium | low)
+  use_ner_model: true         # on-device BERT NER for names/orgs/places (models/bert-base-ner)
+  ner_min_confidence: 0.6
+  redact_logs: true           # sensitive prompts and responses are stored redacted in requests.db
+
+on_device:
+  # First reachable runtime wins.
+  preference:
+    - provider: foundry_local   # Snapdragon Hexagon NPU via Microsoft Foundry Local (QNN)
+      model_id: phi-3.5-mini
+    - provider: ollama          # CPU/GPU on any PC
+      model_id: llama3.2
+  fallback_to_cloud: true       # non-sensitive prompts go to the cloud if the on-device call fails
+  answer_locally_on_cloud_failure: true   # cloud down / rate-limited → answer on-device instead

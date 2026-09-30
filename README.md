@@ -9,7 +9,23 @@ optimizing across cost, latency, quality, and data-locality, not cost alone.
 This is a portfolio/learning project built in phases. Status below reflects
 what's actually implemented right now, not the end-state design.
 
-## Status: All 11 Phases Complete ✅
+## Autopilot Edge — the Snapdragon edition (Phase 12)
+
+The router now runs **hybrid**: an on-device privacy guard scans every
+prompt first, prompts containing personal data (Aadhaar, PAN, bank
+details, phone numbers, names, API keys…) **never leave the machine**,
+simple prompts are answered free by an on-device model, and only hard,
+non-sensitive prompts go to the cheapest capable cloud model. On a
+Snapdragon X PC both on-device models run on the Hexagon NPU. Details in
+Phase 12 below; the challenge write-up is in `docs/PROPOSAL.md`.
+
+```
+streamlit run dashboard/app.py          # live demo: "Try it live" tab
+python scripts/test_privacy_guard.py    # offline privacy-guard check
+python scripts/hybrid_demo.py           # route + log a realistic prompt mix
+```
+
+## Status: All 12 Phases Complete ✅
 
 ### Phase 1 — Unified Model Interface
 - A model registry (`config/model_registry.yaml`) describing every model the
@@ -441,6 +457,79 @@ what's actually implemented right now, not the end-state design.
   naming the two gaps a careful reader would find anyway (quality-parity
   claims need a second working paid key; the better-performing Phase 5
   router isn't wired in as the default yet).
+
+### Phase 12 — Autopilot Edge: Hybrid On-device / Cloud Routing for Snapdragon PCs
+- `app/privacy/` — an **on-device privacy guard** that runs before any
+  routing decision:
+  - `detectors.py` — rules for Indian and general identifiers: Aadhaar
+    (Verhoeff checksum), PAN, GSTIN, IFSC, UPI IDs, payment cards (Luhn
+    checksum), bank account and passport numbers (only next to a context
+    word), phone numbers, emails, API keys and passwords/OTPs. Checksums
+    mean a random 12-digit order number doesn't trip the Aadhaar rule.
+  - `ner.py` — **dslim/bert-base-NER** (MIT, INT8 ONNX, ~109 MB, fetched by
+    `scripts/download_models.py`) finds people, organisations and places
+    the rules can't. It scans long prompts in 510-token windows instead of
+    truncating, snaps entities to whole words, and ignores ID keywords the
+    English model mistakes for names ("Aadhaar", "IFSC").
+  - `guard.py` — merges both into a `PrivacyReport`: findings, a redacted
+    copy, and `sensitive` (any finding at or above `lock_on_severity` in
+    `config/hybrid_config.yaml`; default `medium` = names/contact details
+    and up; organisations and places alone don't lock).
+- `app/edge/accelerators.py` — ONNX Runtime sessions that pick the
+  **Snapdragon Hexagon NPU** (QNN execution provider) first, then DirectML,
+  then CPU. Same code on every PC; only the installed `onnxruntime` package
+  differs (`onnxruntime-qnn` on Snapdragon).
+- `app/models/providers/foundry_local_provider.py` — on-device LLMs via
+  **Microsoft Foundry Local**, which serves the NPU (QNN) build of models
+  like Phi-3.5-mini on Snapdragon X behind an OpenAI-compatible localhost
+  endpoint. Registered as `foundry_local:phi-3.5-mini` (local, $0).
+- `app/router/hybrid.py` — `route_hybrid(prompt)`:
+  1. privacy guard → sensitive prompts go on-device only; if no on-device
+     runtime is reachable the request is **blocked, not sent to the cloud**
+     (fail closed);
+  2. otherwise on-device if the local model meets the tier's existing
+     quality bar (`MIN_QUALITY_FOR_TIER` — reused, not redefined);
+  3. otherwise the cloud model `routing_config.yaml` maps the tier to.
+  Fallbacks: a failed on-device call on a non-sensitive prompt retries in
+  the cloud; a failed cloud call (outage, 429, offline) is answered
+  on-device. On-device runtimes are probed (cached 30 s) in the order
+  `hybrid_config.yaml` lists them: Foundry Local (NPU) first, Ollama second.
+- **Logging (Phase 7 schema, migrated in place):** new columns `placement`,
+  `routing_reason`, `privacy_locked`, `privacy_categories` (finding kinds,
+  never values), `on_device_runtime`, `fallback`, `redacted`. Privacy-locked
+  prompts **and** the responses to them are stored redacted, so personal
+  data doesn't end up in `requests.db` either. Pre-hybrid rows keep
+  working (placement inferred from provider).
+- **API:** `POST /v1/completions` now defaults to `"mode": "hybrid"`
+  (`"static"` keeps the Phase 2 behaviour) and returns placement, reason,
+  privacy categories and fallback; privacy-locked prompts are never sent to
+  a cloud model for Phase 6 verification. New: `POST /v1/privacy/scan`
+  (guard only, no model call) and `GET /v1/on-device` (runtimes +
+  accelerators).
+- **Dashboard:** new "Try it live" tab (privacy scan with highlighted
+  findings → routing decision with its reason → answer → cost vs. Tier-3
+  baseline), on-device % and privacy-lock metrics, and a Snapdragon tab with
+  runtime status and a privacy-guard latency benchmark.
+- **Registry/routing changes found while testing live (2026-09-30):**
+  Groq retired its llama-3.x models for this key (404 `model_not_found`),
+  so Groq entries now point at `openai/gpt-oss-120b` (high) and
+  `openai/gpt-oss-20b` (medium). `gemini-flash-latest` returned 503
+  repeatedly and `gemini-pro-latest` still has no free-tier quota, so
+  Tier 2/3 now route to those Groq models — the only cloud provider
+  answering live here.
+- **Verified:** `scripts/test_privacy_guard.py` — 28 hand-labelled prompts
+  (17 should lock, 11 shouldn't), 28/28 correct, median scan ~9 ms on an
+  Intel i5-12450H CPU. Honest caveat: the cases were written alongside the
+  rules, so this is a regression check, not an independent benchmark.
+  `scripts/hybrid_demo.py` routed 12 live prompts end-to-end (results in
+  `docs/PROPOSAL.md`).
+- **Not verified here:** nothing has run on a real Snapdragon NPU yet —
+  this machine is x86 with no NPU, so both on-device models ran on CPU
+  (NER via ONNX Runtime, LLM via Ollama). The Foundry Local provider is
+  written against its documented SDK but untested on hardware. Small local
+  models also sometimes refuse prompts containing ID numbers even though
+  they run locally; the demo prompts are phrased as form-filling / email
+  tasks, which llama3.2 handles.
 
 **Live/tested:** Gemini (you have a key for this). Ollama (`llama3.2`,
 installed and pulled locally — verified end-to-end through

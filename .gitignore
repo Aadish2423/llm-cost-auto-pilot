@@ -10,3 +10,6 @@ logs/
 .DS_Store
 .pytest_cache/
 .streamlit/
+
+# Downloaded on-device models (fetched by scripts/download_models.py)
+/models/

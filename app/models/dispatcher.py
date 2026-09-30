@@ -11,6 +11,7 @@ import time
 
 from .providers.anthropic_provider import AnthropicProvider
 from .providers.base import ProviderError
+from .providers.foundry_local_provider import FoundryLocalProvider
 from .providers.gemini_provider import GeminiProvider
 from .providers.ollama_provider import OllamaProvider
 from .providers.openai_compatible import OpenAICompatibleProvider
@@ -20,6 +21,7 @@ from .response import LLMResponse
 _PROVIDERS = {
     "gemini": GeminiProvider(),
     "ollama": OllamaProvider(),
+    "foundry_local": FoundryLocalProvider(),
     "openai": OpenAICompatibleProvider("OPENAI_API_KEY", None, "OpenAI"),
     "anthropic": AnthropicProvider(),
     "groq": OpenAICompatibleProvider(
@@ -29,6 +31,12 @@ _PROVIDERS = {
         "TOGETHER_API_KEY", "https://api.together.xyz/v1", "Together AI"
     ),
 }
+
+
+def get_provider(provider: str):
+    """The adapter instance for a provider name (e.g. to ask Foundry Local
+    which hardware it resolved a model to)."""
+    return _PROVIDERS.get(provider)
 
 
 def send_request(prompt: str, model_config: ModelConfig) -> LLMResponse:

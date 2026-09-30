@@ -16,10 +16,14 @@ routing:
     provider: ollama
     model_id: llama3.2
 
+  # Tiers 2/3 -> Groq (2026-09-30): the only cloud provider answering live
+  # right now. gemini-flash-latest returned 503 UNAVAILABLE repeatedly and
+  # gemini-pro-latest has zero free-tier quota (429); Groq's llama-3.x
+  # models were retired, so these point at what Groq serves today.
   tier_2:
-    provider: gemini
-    model_id: gemini-2.5-flash
+    provider: groq
+    model_id: openai/gpt-oss-20b
 
   tier_3:
-    provider: gemini
-    model_id: gemini-2.5-pro
+    provider: groq
+    model_id: openai/gpt-oss-120b

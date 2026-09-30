@@ -20,3 +20,11 @@ scikit-learn==1.9.0
 fastapi==0.139.2
 uvicorn[standard]==0.51.0
 pydantic==2.13.4
+
+# Phase 12: Autopilot Edge — on-device privacy guard + hybrid routing
+onnxruntime==1.30.0     # x64 dev PCs; on Snapdragon X use onnxruntime-qnn (Hexagon NPU)
+tokenizers==0.23.2      # BERT NER tokenizer (models/bert-base-ner, see scripts/download_models.py)
+numpy==2.5.1            # NER post-processing (softmax / entity merging)
+# Snapdragon PCs only (not pinned — Windows on ARM): on-device LLM on the NPU
+#   winget install Microsoft.FoundryLocal
+#   pip install foundry-local-sdk

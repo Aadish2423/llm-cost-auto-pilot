@@ -13,8 +13,16 @@
 # of a hand-set label.
 
 models:
+  # NOTE: the original gemini-2.5-* model IDs below started returning 404
+  # "no longer available to new users" once a real key was tested (Google
+  # retired them for new API keys). Repointed to the current "-latest"
+  # aliases, verified live against a real AI Studio key. gemini-pro-latest
+  # currently returns 429 RESOURCE_EXHAUSTED on the free tier (zero quota
+  # for the pro-tier model it aliases to) — kept in the registry since it's
+  # a quota issue, not a broken model ID, and will work once billing is
+  # enabled.
   - provider: gemini
-    model_id: gemini-2.5-pro
+    model_id: gemini-pro-latest
     cost_per_input_token: 0.00000125
     cost_per_output_token: 0.00001000
     avg_latency_ms: 1500
@@ -23,7 +31,7 @@ models:
     local: false
 
   - provider: gemini
-    model_id: gemini-2.5-flash
+    model_id: gemini-flash-latest
     cost_per_input_token: 0.00000030
     cost_per_output_token: 0.00000250
     avg_latency_ms: 600
@@ -32,7 +40,7 @@ models:
     local: false
 
   - provider: gemini
-    model_id: gemini-2.5-flash-lite
+    model_id: gemini-flash-lite-latest
     cost_per_input_token: 0.00000010
     cost_per_output_token: 0.00000040
     avg_latency_ms: 350
@@ -85,26 +93,44 @@ models:
     requires_api_key: false
     local: true
 
+  # On-device on Snapdragon X PCs: Microsoft Foundry Local serves the Hexagon
+  # NPU (QNN) build of Phi-3.5-mini. $0, nothing leaves the machine.
+  # avg_latency_ms is an unmeasured placeholder until benchmarked on-device;
+  # quality_tier kept at "low" (same class as llama3.2 3B) rather than
+  # guessed upward.
+  - provider: foundry_local
+    model_id: phi-3.5-mini
+    cost_per_input_token: 0.0
+    cost_per_output_token: 0.0
+    avg_latency_ms: 900
+    quality_tier: low
+    requires_api_key: false
+    local: true
+
   # Groq and Together AI both have a genuinely free/low-cost tier, unlike
   # OpenAI/Anthropic, so these are the providers we can actually
   # live-test without a paid key. Prices below are their paid per-token
   # rates (what routing decisions should optimize against at scale) — your
   # personal usage may fall under a $0 free-tier allowance while testing.
+  # Groq retired its llama-3.x models for this key (404 model_not_found,
+  # checked 2026-09-30 via GET /models) — repointed to what Groq serves now.
+  # Prices are Groq's published per-token rates as best known; verify at
+  # https://groq.com/pricing before trusting dashboard dollar figures.
   - provider: groq
-    model_id: llama-3.3-70b-versatile
-    cost_per_input_token: 0.00000059
-    cost_per_output_token: 0.00000079
-    avg_latency_ms: 350
+    model_id: openai/gpt-oss-120b
+    cost_per_input_token: 0.00000015
+    cost_per_output_token: 0.00000060
+    avg_latency_ms: 500
     quality_tier: high
     requires_api_key: true
     local: false
 
   - provider: groq
-    model_id: llama-3.1-8b-instant
-    cost_per_input_token: 0.00000005
-    cost_per_output_token: 0.00000008
-    avg_latency_ms: 200
-    quality_tier: low
+    model_id: openai/gpt-oss-20b
+    cost_per_input_token: 0.000000075
+    cost_per_output_token: 0.00000030
+    avg_latency_ms: 300
+    quality_tier: medium
     requires_api_key: true
     local: false
 
