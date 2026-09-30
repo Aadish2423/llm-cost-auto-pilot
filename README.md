@@ -71,7 +71,7 @@ flowchart LR
 |---|---|
 | Live run of 12 mixed prompts (`scripts/hybrid_demo.py`) | **12/12 answered · 75% on-device · 4/4 personal-data prompts kept local · 48.5% cheaper** than sending everything to the Tier-3 cloud model |
 | Privacy guard on 28 hand-labelled prompts | **28/28 correct**: 0 missed, 0 false locks |
-| Privacy scan latency | **~9 ms median** on CPU (Intel i5-12450H), before any NPU acceleration |
+| Privacy scan latency | **~9 ms median** on the 28 test prompts, **~30 ms** for a 40-word KYC prompt, on CPU (Intel i5-12450H) before any NPU acceleration. The first scan after start-up also loads the model |
 | Automated tests (`pytest`) | **42 passing**, including "personal data is never sent to the cloud, even when the local model fails" |
 
 ![Dashboard: cost savings, share answered on-device, privacy-locked prompts](docs/images/dashboard-savings.png)
