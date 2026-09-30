@@ -1,0 +1,32 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Cache on-device privacy model
+        uses: actions/cache@v4
+        with:
+          path: models/bert-base-ner
+          key: bert-base-ner-${{ hashFiles('scripts/download_models.py') }}
+
+      - name: Download on-device privacy model
+        run: python scripts/download_models.py
+
+      # No API keys and no local LLM needed: model calls are faked in tests/.
+      - name: Run tests
+        run: pytest -q

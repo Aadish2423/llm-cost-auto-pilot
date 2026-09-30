@@ -11,6 +11,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# On-device privacy model (~110 MB, MIT) — fetched at build time, not committed.
+RUN python scripts/download_models.py
+
 EXPOSE 8000
 EXPOSE 8501
 

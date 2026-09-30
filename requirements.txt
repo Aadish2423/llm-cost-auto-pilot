@@ -28,3 +28,6 @@ numpy==2.5.1            # NER post-processing (softmax / entity merging)
 # Snapdragon PCs only (not pinned — Windows on ARM): on-device LLM on the NPU
 #   winget install Microsoft.FoundryLocal
 #   pip install foundry-local-sdk
+
+# Tests
+pytest==9.1.1

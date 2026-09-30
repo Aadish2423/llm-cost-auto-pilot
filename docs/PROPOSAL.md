@@ -100,6 +100,9 @@ list.
 - **Live end-to-end run** (`scripts/hybrid_demo.py`, 12 mixed prompts): all 12 answered.
   **75% were answered on-device**, **4 of 4 prompts with personal data** were kept on-device,
   and total cost was **48.5% lower** than sending everything to the Tier-3 cloud model.
+- **Automated tests:** 42 passing (`pytest`), including the guarantee that a prompt with
+  personal data is never sent to a cloud model, even when the on-device model fails or is
+  missing. They also run in GitHub Actions on every push.
 - **Snapdragon X Elite NPU:** *[to be measured on Snapdragon hardware / Qualcomm AI Hub]*.
 
 ## 2. Application use case and innovation
