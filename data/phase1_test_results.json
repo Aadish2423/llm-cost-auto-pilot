@@ -1,502 +1,402 @@
 [
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "What is the capital of France?",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 5569.547499995679,
+    "latency_ms": 3429.665499999828,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\nPlease retry in 26.273538661s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '26s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 236.25680000986904,
+    "latency_ms": 204.2687000002843,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\nPlease retry in 25.860619254s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 244.75680000614375,
+    "latency_ms": 217.55599999960396,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\nPlease retry in 25.652534754s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 226.91450000274926,
+    "latency_ms": 180.67299999984243,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\nPlease retry in 25.452488681s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 230.31500005163252,
+    "latency_ms": 186.47490000057587,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\nPlease retry in 25.266493044s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 232.03159996774048,
+    "latency_ms": 201.07670000015787,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\nPlease retry in 25.066248863s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Write a short, creative product description for a reusable coffee cup.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 232.50520008150488,
+    "latency_ms": 199.243099999876,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\nPlease retry in 24.866751837s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 228.55799994431436,
+    "latency_ms": 186.16479999946023,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\nPlease retry in 24.687976883s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 228.95619994960725,
+    "latency_ms": 205.83570000053442,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\nPlease retry in 24.491116477s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
-    "model": "openai:gpt-4o",
+    "model": "gemini:gemini-pro-latest",
     "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 229.1304999962449,
+    "latency_ms": 185.86729999969975,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-pro-latest': 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro\\nPlease retry in 24.291998615s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerDay-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-3.1-pro', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-pro'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}"
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "What is the capital of France?",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 245.47639989759773,
+    "latency_ms": 1055.6236000002173,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-flash-latest': 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 229.85050000716,
-    "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "text": "* **Amount:** $1,250.00\n* **Date:** 2026-08-01",
+    "input_tokens": 39,
+    "output_tokens": 29,
+    "latency_ms": 1416.8634000006932,
+    "cost_usd": 8.42e-05,
+    "error": null
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 228.9873999543488,
-    "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "text": "apple, banana, cherry",
+    "input_tokens": 17,
+    "output_tokens": 5,
+    "latency_ms": 1299.126900000374,
+    "cost_usd": 1.76e-05,
+    "error": null
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 232.35549998935312,
+    "latency_ms": 3447.0901000004233,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-flash-latest': 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 229.29970000404865,
-    "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "text": "**Billing**",
+    "input_tokens": 25,
+    "output_tokens": 3,
+    "latency_ms": 2229.8515000002226,
+    "cost_usd": 1.5e-05,
+    "error": null
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 230.0059999106452,
+    "latency_ms": 2967.412400000285,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-flash-latest': 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Write a short, creative product description for a reusable coffee cup.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 226.65980004239827,
+    "latency_ms": 12618.958899999598,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-flash-latest': 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 229.40270008984953,
+    "latency_ms": 2113.296100000298,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-flash-latest': 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 229.3618000112474,
-    "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "text": "**Overall Sentiment:** **Mixed (Leaning Negative)**\n\n---\n\n### **Reasoning:**\n\n1. **Mild Positive Element (\"The food was decent\"):**\n   * The word \"decent\" indicates that the food met basic expectations, but it is lukewarm praise rather than enthusiasm (like \"delicious\" or \"amazing\"). It contributes a slight positive/neutral tone.\n\n2. **The Pivot Word (\"but\"):**\n   * The conjunction \"but\" creates a contrast and signals that the second half of the sentence carries more emotional weight and represents the reviewer's ultimate takeaway.\n\n3. **Strong Negative Element (\"painfully slow\"):**\n   * The phrase \"painfully slow\" uses strong, emotionally charged language. The adverb \"painfully\" intensifies the negative experience of the wait time, showing significant frustration.\n\n### **Conclusion:**\nWhile the review contains both positive and negative elements, the **intensity of the negative feedback regarding the service outweighs the mild compliment about the food**, leaving an overall unfavorable impression.",
+    "input_tokens": 24,
+    "output_tokens": 210,
+    "latency_ms": 3876.7557999999553,
+    "cost_usd": 0.0005322,
+    "error": null
   },
   {
-    "model": "openai:gpt-4o-mini",
+    "model": "gemini:gemini-flash-latest",
     "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 224.26069993525743,
+    "latency_ms": 2631.9699999994555,
     "cost_usd": 0.0,
-    "error": "OpenAI call failed for model 'gpt-4o-mini': Error code: 401 - {'error': {'message': 'Incorrect API key provided: tgp_v1_8**************************************5oKU. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}"
+    "error": "Gemini call failed for model 'gemini-flash-latest': 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
   },
   {
-    "model": "ollama:llama3.2",
+    "model": "gemini:gemini-flash-lite-latest",
     "prompt": "What is the capital of France?",
     "text": "The capital of France is Paris.",
-    "input_tokens": 32,
-    "output_tokens": 8,
-    "latency_ms": 17744.73370006308,
-    "cost_usd": 0.0,
+    "input_tokens": 8,
+    "output_tokens": 7,
+    "latency_ms": 855.2776000005906,
+    "cost_usd": 3.6e-06,
     "error": null
   },
   {
-    "model": "ollama:llama3.2",
+    "model": "gemini:gemini-flash-lite-latest",
     "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
-    "text": "Date: 2026-08-01\nAmount: $1,250.00",
-    "input_tokens": 54,
-    "output_tokens": 19,
-    "latency_ms": 1239.6150999702513,
-    "cost_usd": 0.0,
-    "error": null
-  },
-  {
-    "model": "ollama:llama3.2",
-    "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
-    "text": "Here's the reformatted list in a comma-separated format:\n\napple, banana, cherry",
-    "input_tokens": 40,
-    "output_tokens": 18,
-    "latency_ms": 1880.065800040029,
-    "cost_usd": 0.0,
-    "error": null
-  },
-  {
-    "model": "ollama:llama3.2",
-    "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
-    "text": "The company saw a significant boost in revenue this quarter, primarily fueled by strong growth in its cloud subscription business. However, the increase in revenue was somewhat tempered by higher expenses related to expanding its infrastructure, which resulted in narrower profit margins.",
-    "input_tokens": 57,
-    "output_tokens": 48,
-    "latency_ms": 2083.6868999758735,
-    "cost_usd": 0.0,
-    "error": null
-  },
-  {
-    "model": "ollama:llama3.2",
-    "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
-    "text": "Based on the description of the issue, I would classify this support ticket as \"Billing\". The customer is complaining about an error with their payment (being charged twice), which suggests a problem with the billing process.",
-    "input_tokens": 49,
-    "output_tokens": 43,
-    "latency_ms": 1798.7747000297531,
-    "cost_usd": 0.0,
-    "error": null
-  },
-  {
-    "model": "ollama:llama3.2",
-    "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
-    "text": "When choosing between REST (Representational State of Resource) and GraphQL APIs, developers must weigh tradeoffs between flexibility, performance, and complexity. REST APIs offer a standardized approach to resource-based interactions, providing simplicity and ease of adoption, but may lead to over-fetching or under-fetching of data due to rigid query structures. In contrast, GraphQL APIs provide a schema-driven approach, allowing for highly customized queries and reducing the amount of unnecessary data transferred, but can be more complex to implement and maintain, especially for large datasets. Ultimately, REST is suitable for simple, resource-based interactions, while GraphQL is better suited for complex, dynamic applications requiring flexibility and scalability.",
+    "text": "* **Date:** 2026-08-01\n* **Amount:** $1,250.00",
     "input_tokens": 39,
-    "output_tokens": 133,
-    "latency_ms": 4275.365599896759,
-    "cost_usd": 0.0,
+    "output_tokens": 29,
+    "latency_ms": 832.6631000009002,
+    "cost_usd": 1.5499999999999997e-05,
     "error": null
   },
   {
-    "model": "ollama:llama3.2",
+    "model": "gemini:gemini-flash-lite-latest",
+    "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
+    "text": "apple, banana, cherry",
+    "input_tokens": 17,
+    "output_tokens": 5,
+    "latency_ms": 944.0507999997862,
+    "cost_usd": 3.6999999999999997e-06,
+    "error": null
+  },
+  {
+    "model": "gemini:gemini-flash-lite-latest",
+    "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
+    "text": "The company achieved record quarterly revenue driven by strong growth in cloud subscriptions. However, profit margins narrowed slightly as a result of increased infrastructure spending.",
+    "input_tokens": 32,
+    "output_tokens": 28,
+    "latency_ms": 819.481900000028,
+    "cost_usd": 1.44e-05,
+    "error": null
+  },
+  {
+    "model": "gemini:gemini-flash-lite-latest",
+    "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
+    "text": "**Billing**",
+    "input_tokens": 25,
+    "output_tokens": 3,
+    "latency_ms": 695.3908000004958,
+    "cost_usd": 3.6999999999999997e-06,
+    "error": null
+  },
+  {
+    "model": "gemini:gemini-flash-lite-latest",
+    "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
+    "text": "**REST** APIs are straightforward, highly cacheable, and mature, making them ideal for simple CRUD operations, but they often suffer from over-fetching or under-fetching data due to rigid endpoint structures. **GraphQL** solves this by allowing clients to request precisely the data they need in a single round-trip, offering superior flexibility for complex, client-driven applications. However, this flexibility introduces significant tradeoffs: GraphQL sacrifices standard HTTP caching mechanisms, increases server-side complexity with query parsing and validation, and is vulnerable to performance bottlenecks from nested, heavy queries.",
+    "input_tokens": 14,
+    "output_tokens": 112,
+    "latency_ms": 1300.356799999463,
+    "cost_usd": 4.62e-05,
+    "error": null
+  },
+  {
+    "model": "gemini:gemini-flash-lite-latest",
     "prompt": "Write a short, creative product description for a reusable coffee cup.",
-    "text": "\"Fuel your day with a dash of sustainability! Our Reusable Rebel Cup is here to shake things up in the world of disposable cups.\n\nMade from high-quality, BPA-free materials, this cup is as tough as it is stylish. With its sleek design and vibrant color options, you'll be sipping like a boss while making a statement about what matters most: reducing waste.\n\nFrom sunrise brews to mid-day pick-me-ups, our Reusable Rebel Cup has got your back (and the planet's). Say goodbye to single-use cups and hello to a more eco-friendly you. Fill it up with coffee, tea, or your favorite drink of choice \u2013 this cup is ready for whatever adventure comes next!\"",
-    "input_tokens": 38,
-    "output_tokens": 144,
-    "latency_ms": 4493.399400031194,
-    "cost_usd": 0.0,
+    "text": "**The Sip Society Cup**\n\nMeet your daily commute\u2019s new best friend. Crafted from thermal-grade, shatter-proof ceramic, this isn't just a cup\u2014it\u2019s an upgrade to your morning ritual. It hugs your hand like a warm mug, locks in heat for hours, and features a splash-proof lid designed for life on the move. Better for your brews, kinder to the planet, and chic enough to turn heads at the local caf\u00e9. \n\n*Drink good. Do good. Never settle for paper again.*",
+    "input_tokens": 14,
+    "output_tokens": 111,
+    "latency_ms": 1418.2071000004726,
+    "cost_usd": 4.5799999999999995e-05,
     "error": null
   },
   {
-    "model": "ollama:llama3.2",
+    "model": "gemini:gemini-flash-lite-latest",
     "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
-    "text": "Based on the given constraints, I would recommend a GPS watch as a suitable option.\n\nHere's why:\n\n1. Budget: A good quality GPS watch can range from $200 to $400, which falls within the budget of $500.\n2. Waterproof: Many GPS watches are designed to be water-resistant or waterproof, with some even having IPX7 ratings, meaning they can withstand immersion in up to 1 meter of water for 30 minutes.\n3. GPS: A GPS watch typically comes equipped with a built-in GPS receiver, providing accurate location tracking and navigation.\n\nSome popular GPS watch brands that fit within the budget include:\n\n* Fitbit (e.g., Fitbit Versa 3 or Fitbit Inspire HR)\n* Garmin (e.g., Garmin Forerunner 945 or Garmin Fenix 6X Pro)\n* Samsung (e.g., Samsung Galaxy Watch Active2)\n\nWhen choosing a GPS watch, consider factors such as:\n\n* Accuracy and responsiveness of the GPS signal\n* Battery life and charging method\n* Additional features like heart rate monitoring, workout tracking, and notification alerts\n* Compatibility with smartphones and operating systems\n\nBy considering these factors and selecting a GPS watch that meets your needs, you can find a reliable and feature-rich device within your budget.",
-    "input_tokens": 51,
-    "output_tokens": 258,
-    "latency_ms": 6901.326399995014,
-    "cost_usd": 0.0,
+    "text": "The category of device that best fits your constraints is a **Rugged Outdoor/Multisport GPS Smartwatch** (specifically, models positioned in the mid-range or previous-generation flagship tier from brands like Garmin, Amazfit, or Coros). \n\nHere is the reasoning broken down by your constraints:\n\n### 1. Budget: Under $500\nWhile high-end adventure watches can easily exceed $800 to $1,000, the $200\u2013$500 sweet spot offers the highest value-to-performance ratio in consumer tech. In this price bracket, you avoid cheap fitness trackers that lack dedicated, accurate GPS chips, but you don't pay extra for ultra-niche materials like titanium or sapphire glass unless you want them. You can easily find robust, reliable devices with multi-day battery lives and premium health-tracking suites well under your $500 ceiling.\n\n### 2. Must be Waterproof\nUnlike smartphones or standard smartwatches that merely offer \"water resistance\" (often just splash-proof or rated for light rain), dedicated outdoor watches in this category typically feature **5 ATM to 10 ATM ratings** (meaning they are pressure-tested to withstand depths of 50 to 100 meters). They are specifically designed for swimming, surfing, kayaking, and torrential downpours. Furthermore, their physical buttons (rather than purely touch-based screens) ensure you can actually operate the device while it\u2019s submerged or soaking wet.\n\n### 3. Needs GPS\nUnlike budget fitness bands that rely on \"connected GPS\" (piggybacking off your smartphone\u2019s location), devices in this category feature **standalone, multi-constellation GNSS chips** (GPS, GLONASS, Galileo, BeiDou). This means the watch can accurately track your speed, distance, and route independently\u2014crucial if you are leaving your phone behind on a run, hike, or open-water swim. \n\n### Why this *category* beats the alternatives:\n* **Why not a Smartphone?** Even waterproof phones are bulky to carry during strenuous activity, expensive to replace if dropped, and terrible for battery life when continuous GPS is running.\n* **Why not a Standard Smartwatch (like an Apple Watch or Galaxy Watch)?** While standard smartwatches have GPS and water resistance, their batteries usually last less than 24\u201336 hours (forcing daily charging), their touchscreens fail when wet, and they lack the physical durability required for harsh environments. \n\n**Examples of what to look for in this category:** Garmin Forerunner series (e.g., 265 or mid-tier older models), Garmin Instinct 2, Coros Pace 3, or Amazfit T-Rex 3.",
+    "input_tokens": 29,
+    "output_tokens": 574,
+    "latency_ms": 3556.720800000221,
+    "cost_usd": 0.00023249999999999999,
     "error": null
   },
   {
-    "model": "ollama:llama3.2",
+    "model": "gemini:gemini-flash-lite-latest",
     "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
-    "text": "The sentiment of this review is mixed, but overall it's slightly negative.\n\nMy reasoning for this analysis is as follows:\n\n* The reviewer mentions that the \"food was decent\", which suggests a positive aspect of their experience. However, it's not a glowing endorsement, implying that the food was merely satisfactory rather than exceptional.\n* The phrase \"painfully slow\" in relation to the service implies frustration and annoyance. The use of the word \"painfully\" emphasizes the extent of the problem, suggesting that it was more than just a minor inconvenience.\n\nOverall, while the reviewer doesn't express extreme dislike or anger, they do seem disappointed with their experience. They're acknowledging that the food was decent, but the slow service overshadowed it. The tone is neutral to slightly negative, indicating that the reviewer would not recommend this establishment based on their experience.",
-    "input_tokens": 49,
-    "output_tokens": 170,
-    "latency_ms": 5062.106700032018,
-    "cost_usd": 0.0,
+    "text": "**Sentiment:** Mixed (leaning slightly negative)\n\n**Reasoning:** \n* **The food was decent:** This is a mildly positive or neutral statement. \"Decent\" means acceptable or okay, but not necessarily great or memorable. \n* **...but the service was painfully slow:** This is a strongly negative statement. The word \"painfully\" intensifies the slowness, indicating a high level of frustration.\n* **The pivot:** The conjunction \"but\" weighs the second half of the sentence more heavily. While the food was okay, the poor service significantly detracted from the overall experience, making the review lean negative overall.",
+    "input_tokens": 24,
+    "output_tokens": 131,
+    "latency_ms": 1374.5552999998836,
+    "cost_usd": 5.48e-05,
+    "error": null
+  },
+  {
+    "model": "gemini:gemini-flash-lite-latest",
+    "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
+    "text": "Debugging a function that returns `None` instead of an expected `list` is one of the most common tasks in Python. Usually, this means the function *started* to do something, but either hit a `return` statement prematurely, modified a list in-place instead of returning it, or fell off the end of the function without an explicit return.\n\nHere is a systematic, step-by-step guide on how I would debug this.\n\n---\n\n### Step 1: Inspect the Function's Return Statements\nThe very first thing I do is read the function's code specifically looking for the `return` keyword.\n\n*   **Look for missing returns:** Does the function end without a `return` statement? (In Python, a function without a return statement implicitly returns `None`).\n*   **Look for conditional returns:** Are there `if/else` branches where one branch returns the list, but the other branch returns `None` (or nothing)?\n*   **Look for print vs. return:** Did the original author use `print(my_list)` inside the function instead of `return my_list`?\n\n*Example of the bug:*\n```python\ndef get_evens(numbers):\n    evens = []\n    for n in numbers:\n        if n % 2 == 0:\n            evens.append(n)\n    # Bug: Forgot to 'return evens' at the end!\n```\n\n---\n\n### Step 2: Check for In-Place Modifications (The \"Mutated None\" Trap)\nMany built-in list methods in Python (like `.sort()`, `.append()`, `.extend()`, `.reverse()`, and `.remove()`) modify the list **in-place** and explicitly return `None`. \n\nIf I see the function calling a list method and immediately returning the result of that method, I've likely found the bug.\n\n*Example of the bug:*\n```python\ndef sort_user_list(users):\n    # Bug: .sort() sorts in-place and returns None. \n    # This function returns None, not the sorted list!\n    return users.sort() \n```\n*The Fix:* Separate the mutation from the return statement.\n```python\ndef sort_user_list(users):\n    users.sort()\n    return users\n```\n\n---\n\n### Step 3: Add a \"Sanity Check\" Print/Log at the Return Point\nIf the function is long or complex, I add a print statement right before every possible `return` statement to see what is actually being handed back.\n\n```python\ndef process_data(data):\n    results = []\n    # ... lots of complex logic ...\n    \n    print(f\"DEBUG: About to return: {results}\") # <-- Add this\n    return results\n```\n*   If the print statement outputs `[]` (an empty list), the logic inside the loop/conditionals is wrong.\n*   If the print statement outputs `None`, then a variable got overwritten with `None` somewhere above.\n\n---\n\n### Step 4: Step Through with a Debugger (pdb)\nIf printing isn't enough, I use Python's built-in interactive debugger (`pdb`) or my IDE's debugger (like VS Code or PyCharm) to trace execution step-by-step.\n\nI insert a breakpoint right before the function exits:\n\n```python\nimport pdb\n\ndef my_function(data):\n    # ... logic ...\n    pdb.set_trace() # Execution pauses here\n    return results\n```\n\nWhen the code pauses, I inspect the state in the terminal:\n1. Type `p results` to see what value `results` currently holds.\n2. Type `type(results)` to confirm if it somehow became `NoneType`.\n3. Type `where` (or `bt` for backtrace) to see how the execution flow arrived at this point.\n\n---\n\n### Step 5: Trace the Inputs (Garbage In, Garbage Out)\nSometimes the function *itself* is fine, but the data passed into it caused an early exit. \n\nI check the top of the function for **guard clauses** that might be triggering unexpectedly:\n\n```python\ndef parse_items(file_path):\n    if not file_path:\n        return None # <-- Triggers if input is empty string/None\n        \n    # ... rest of function ...\n```\nIf the caller passes `None` or an empty value, and the function isn't designed to handle it gracefully, it might return `None` immediately.\n\n---\n\n### Step 6: Write a Minimal Reproducible Example / Test\nFinally, if I'm still stuck, I isolate the function in a tiny script and test",
+    "input_tokens": 24,
+    "output_tokens": 1020,
+    "latency_ms": 4606.493300000693,
+    "cost_usd": 0.0004104,
     "error": null
   },
   {
     "model": "ollama:llama3.2",
-    "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
-    "text": "Debugging a Python Function\n==========================\n\nIn this walkthrough, we'll go through the steps to debug a Python function that returns `None` instead of the expected list.\n\n### Step 1: Review the Expected Output and Actual Output\n\nStart by reviewing the expected output and actual output of your function. Check the documentation or code comments for the expected return type and value.\n\n```python\n# Expected output: [1, 2, 3]\n# Actual output: None\n```\n\n### Step 2: Inspect the Function Signature\n\nCheck if the function signature is correct. Verify that the function returns a list as specified in the documentation or code comments.\n\n```python\ndef my_function(input_data):\n    # ...\n    return []\n```\n\nIn this case, the function signature looks good.\n\n### Step 3: Check for Syntax Errors\n\nRun your code with an IDE or Python interpreter to catch any syntax errors. If there's a syntax error, fix it and run the code again.\n\n```python\n# File: my_function.py\ndef my_function(input_data):\n    # Syntax error: missing return statement\n    print(\"Hello\")\n```\n\nIn this case, we need to add a `return` statement.\n\n### Step 4: Analyze the Function Logic\n\nGo through your function's logic and identify potential issues. Check for any conditions that might cause the function to return `None`.\n\n```python\ndef my_function(input_data):\n    if input_data is None:\n        return None\n```\n\nIn this case, we're returning `None` when `input_data` is `None`. We need to rethink our logic.\n\n### Step 5: Add Debugging Print Statements\n\nAdd print statements or use a debugger to inspect the values of variables within your function. This will help you understand what's happening before the return statement.\n\n```python\ndef my_function(input_data):\n    print(\"Input data:\", input_data)\n    if input_data is None:\n        print(\"Returning None\")\n        return None\n```\n\nIn this case, we see that `input_data` is not `None`, so we need to rethink our logic again.\n\n### Step 6: Use a Debugger or IDE Tool\n\nUse a debugger or an IDE tool like PyCharm, VSCode, or Spyder to step through your code. This will allow you to examine the values of variables at each step and identify where things are going wrong.\n\n```python\nimport pdb; pdb.set_trace()\ndef my_function(input_data):\n    # ...\n```\n\nIn this case, we can use the debugger to inspect the values of `input_data` and see why it's not returning the expected list.\n\n### Step 7: Rethink Your Logic\n\nBased on your analysis, rethink your logic and fix any issues. Make sure you're handling all possible scenarios correctly.\n\n```python\ndef my_function(input_data):\n    if input_data is None:\n        return []  # or some other default value\n    else:\n        # Process input data here\n        result = [x for x in range(1, 4)]  # example processing\n        return result\n```\n\nIn this case, we've revised our logic to handle the `input_data` variable correctly and return the expected list.\n\nExample Use Cases\n-----------------\n\n```python\n# Test with valid input data\nprint(my_function([1, 2, 3]))  # [1, 2, 3]\n\n# Test with invalid input data (None)\nprint(my_function(None))  # []\n```\n\nIn this example, the function returns the expected list for both valid and invalid input data.",
-    "input_tokens": 48,
-    "output_tokens": 739,
-    "latency_ms": 19703.02170002833,
-    "cost_usd": 0.0,
-    "error": null
-  },
-  {
-    "model": "groq:llama-3.3-70b-versatile",
     "prompt": "What is the capital of France?",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 690.3880999889225,
+    "latency_ms": 6002.907899999627,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 40.503299911506474,
+    "latency_ms": 4034.149200000684,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 43.78629999700934,
+    "latency_ms": 4041.4356999999654,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 44.0027000149712,
+    "latency_ms": 4043.349699999453,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 40.77990003861487,
+    "latency_ms": 4053.6961999996493,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 38.49449998233467,
+    "latency_ms": 4047.9253000003155,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Write a short, creative product description for a reusable coffee cup.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 43.29339996911585,
+    "latency_ms": 4055.752900000698,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 39.179000072181225,
+    "latency_ms": 4063.0101000006107,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 42.48699999880046,
+    "latency_ms": 4071.2790999996287,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   },
   {
-    "model": "groq:llama-3.3-70b-versatile",
+    "model": "ollama:llama3.2",
     "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
     "text": "",
     "input_tokens": 0,
     "output_tokens": 0,
-    "latency_ms": 44.02089992072433,
+    "latency_ms": 4053.4265999995114,
     "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.3-70b-versatile': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "What is the capital of France?",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 40.43630009982735,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Extract the date and amount from: 'Invoice #4471, due $1,250.00 on 2026-08-01.'",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 44.05720008071512,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Reformat this list into a comma-separated string: apple, banana, cherry",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 38.340300088748336,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Summarize in 2 sentences: The company reported record revenue this quarter driven by strong cloud subscription growth, though margins narrowed slightly due to increased infrastructure spending.",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 41.036700014956295,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Classify this support ticket as billing, technical, or account: 'I was charged twice for my subscription this month.'",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 46.035500010475516,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Compare the tradeoffs between REST and GraphQL APIs in a short paragraph.",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 86.17730007972568,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Write a short, creative product description for a reusable coffee cup.",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 52.162099978886545,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Given the constraints: budget under $500, must be waterproof, needs GPS \u2014 recommend a category of device and explain your reasoning.",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 45.603099977597594,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Analyze the sentiment of this review and explain your reasoning: 'The food was decent but the service was painfully slow.'",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 45.688799931667745,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
-  },
-  {
-    "model": "groq:llama-3.1-8b-instant",
-    "prompt": "Walk through, step by step, how you would debug a Python function that returns None instead of the expected list.",
-    "text": "",
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "latency_ms": 48.82220004219562,
-    "cost_usd": 0.0,
-    "error": "Groq call failed for model 'llama-3.1-8b-instant': Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}"
+    "error": "Ollama call failed for model 'llama3.2'. Is `ollama serve` running and has `ollama pull llama3.2` been run? Original error: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download"
   }
 ]

@@ -1,4 +1,14 @@
-# LLM Cost Auto Pilot
+# Autopilot Edge — Hybrid AI Router for Snapdragon PCs
+
+**Private by default, cloud only when it's worth it.** Entry for the
+Snapdragon® AI Lab Build & Present Challenge — see
+[docs/PROPOSAL.md](docs/PROPOSAL.md) and [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+Built on *LLM Cost Auto Pilot* (Phases 1–11 below); the Snapdragon /
+on-device work is Phase 12.
+
+---
+
+## LLM Cost Auto Pilot
 
 An intelligent routing layer that sits in front of multiple LLM providers,
 predicts the cost of a request **before** sending it, routes to the
